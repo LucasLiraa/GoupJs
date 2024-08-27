@@ -1,0 +1,571 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+    --body-color: #E4E9F7;
+    --sidebar-color: #FFF;
+    --primary-color: #695CFE;
+    --primary-color-light: #F6F5FF;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    background: var(--body-color);
+    transition: var(--tran-05);
+}
+
+body.dark{
+    --body-color: #18191A;
+    --sidebar-color: #242526;
+    --primary-color: #3A3B3C;
+    --primary-color-light: #3A3B3C;
+    --toggle-color: #FFF;
+    --text-color: #CCC;
+}
+
+/* ===== Sidebar ===== */
+.sideMenu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background-color: var(--sidebar-color);
+    transition: var(--tran-05);
+    z-index: 100;
+}
+.sideMenu.close{
+    width: 88px;
+}
+
+/* ===== Resuable CSS ===== */
+.sideMenu .sideMenuText{
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: var(--tran-04);
+    white-space: nowrap;
+    opacity: 1;
+}
+
+.sideMenu.close .sideMenuText{
+    opacity: 0;
+}
+.sideMenu .sideImage{
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sideMenu li{
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+.sideMenu li .icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    font-size: 20px;
+}
+.sideMenu li .icon,
+.sideMenu li .sideMenuText{
+    color: var(--text-color);
+    transition: var(--tran-02);
+}
+.sideMenu header{
+    position: relative;
+}
+.sideMenu .sideMenuImage img{
+    width: 40px;
+    border-radius: 6px;
+}
+.sideMenu header .sideMenuImage{
+    display: flex;
+    align-items: center;
+}
+
+header .sideMenuImage .sideMenuHeaderText{
+    display: flex;
+    flex-direction: column;
+}
+.sideMenuHeaderText .sideMenuName{
+    font-weight: 600;
+}
+.sideMenuHeaderText .sideMenuProfession{
+    margin-top: -2px;
+}
+.sideMenu header .toggle{
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%) rotate(180deg);
+    height: 25px;
+    width: 25px;
+    background:var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--sidebar-color);
+    font-size: 22px;
+    transition: var(--tran-03);
+}
+.sideMenu.close header .toggle{
+    transform: translateY(-50%);
+}
+body.dark .sideMenu header .toggle{
+    color: var(--text-color);
+}
+.sideMenu .sideMenuSelections{
+    margin-top: 35px;
+}
+.sideMenu .sideMenuSearch{
+    background: var(--primary-color-light);
+    border-radius: 6px;
+    transition: var(--tran-05);
+}
+.sideMenuSearch input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--primary-color-light);
+    transition: var(--tran-05);
+    color: var(--text-color);
+}
+.sideMenu li a{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--tran-04);
+}
+.sideMenu li a:hover{
+    background-color: var(--primary-color);
+}
+.sideMenu li a:hover .icon,
+.sideMenu li a:hover .sideMenuText{
+    color: var(--sidebar-color);
+}
+body.dark .sideMenu li a:hover .icon,
+body.dark .sideMenu li a:hover .sideMenuText{
+    color: var(--text-color);
+}
+.sideMenu .sideMenuOptions{
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sideMenuOptions .sideMenuMode{
+    position: relative;
+    border-radius: 6px;
+    background: var(--primary-color-light);
+}
+.sideMenuOptions .sideMenuMode .moon-sun{
+    height: 50px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+}
+.sideMenuOptions .sideMenuMode i{
+    position: absolute;
+    transition: var(--tran-03);
+}
+.sideMenuOptions .sideMenuMode i.sun{
+    opacity: 0;
+}
+
+body.dark .sideMenuOptions .sideMenuMode i.sun{
+    opacity: 1;
+}
+body.dark .sideMenuOptions .sideMenuMode i.moon{
+    opacity: 0;
+}
+
+.sideMenuOptions .sideMenuMode .sideMenuToggle{
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-width: 60px;
+    cursor: pointer;
+    background: var(--primary-color-light);
+    background: var(--primary-color-light);
+}
+
+.sideMenuToggle .sideMenuSwitch{
+    position:relative;
+    height: 22px;
+    width: 44px;
+    border-radius: 25px;
+    background: var(--toggle-color);
+    transition: var(--tran-05);
+}
+
+.sideMenuSwitch::before{
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    background: var(--sidebar-color);
+    transition: var(--tran-03);
+}
+
+body.dark .sideMenuSwitch::before{
+    left: 24px;
+}
+
+.sectionDashboard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    left: 250px;
+    width: calc(100% - 250px);
+    background: var(--body-color);
+    transition: var(--tran-05);
+}
+.sideMenu.close~.sectionDashboard{
+    left: 88px;
+    width: calc(100% - 88px);
+}
+
+.dashboard{
+    width: 90%;
+    background-color: var(--sidebar-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dashboardTitle h1{
+    text-align: center;
+    color: var(--text-color);
+}
+
+h3{
+    color: var(--text-color);
+    border-bottom: 2px solid #eeeeee;
+}
+
+.dashboardFilters{
+    display: flex;
+    flex-direction: row;
+}
+.dashboardFilters{
+    margin-left: 15px;
+}
+
+.dashboardFilters select{
+    border-radius: 6px;
+    color: var(--text-color);
+    background-color: var(--sidebar-color);
+}
+.dashboardFilters h3{
+    margin-right: 10px;
+}
+
+.dashboardCharts{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    gap: 10px;
+    
+    background-color: var(--body-color);
+}
+
+.dashboardChartsUp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+    height: 150px;
+    border-radius: 6px;
+}
+
+.dashboardChartDetails,
+.dashboardChartAvailable,
+.dashboardChartUse{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 47%;
+    height: 90%;
+
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+.dashboardChartDetails label,
+.dashboardChartAvailable label,
+.dashboardChartUse label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    border-radius: 6px;
+    background-color: var(--primary-color-light);
+    transition: var(--tran-03);
+}
+
+.dashboardChartSelect h1{
+    margin-top: 40px;
+    font-size: 2.5rem;
+    transition: var(--tran-03);
+}
+.dashboardChartDetails h1,
+.dashboardChartAvailable h1,
+.dashboardChartUse h1{
+    margin-top: 20px;
+    font-size: 2.5rem;
+
+}
+
+.dashboardChartsDown{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+    height: 400px;
+
+    border-radius: 6px;
+}
+.dashboardChartsLeft{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 47%;
+    height: 90%;
+    gap: 10px;
+}
+
+.dashboardChartsModels{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartsRight{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 47%;
+    height: 90%;
+    gap: 10px;
+}
+
+.dashboardChartStats,
+.dashboardChartAmount{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 50%;
+
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartsModels label,
+.dashboardChartStats label,
+.dashboardChartAmount label,
+.dashboardChartDetailsUp label,
+.dashboardChartStorange label,
+.dashboardChartRam label,
+.dashboardChartProcessor label,
+.dashboardChartDetailsMonitor label,
+.dashboardChartDisplayport label,
+.dashboardChartAdapter label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    border-radius: 6px;
+    background-color: var(--primary-color-light);
+    transition: var(--tran-03);
+}
+
+
+.dashboardChartsLeftEquip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 38%;
+    height: 90%;
+    gap: 10px;
+}
+
+.dashboardChartsRightEquip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 56%;
+    height: 90%;
+    gap: 10px;
+}
+.dashboardChartsRightUp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    width: 100%;
+    height: 100%;
+}
+
+.dashboardChartDetailsUp{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 60%;
+    height: 100%;
+
+    margin-right: 10px;
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartStorange{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 40%;
+    height: 100%;
+
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartsRightDown{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    width: 100%;
+    height: 100%;
+}
+
+.dashboardChartRam{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 40%;
+    height: 100%;
+
+    margin-right: 10px;
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartProcessor{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 60%;
+    height: 100%;
+
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartDetailsMonitor{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    margin-right: 10px;
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.dashboardChartDisplayport,
+.dashboardChartAdapter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    margin-right: 10px;
+    border-radius: 6px;
+    border: solid 1px var(--text-color);
+    color: var(--text-color);
+    transition: var(--tran-03);
+
+    background-color: var(--primary-color);
+}
