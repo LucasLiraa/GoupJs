@@ -119,71 +119,55 @@ document.addEventListener('DOMContentLoaded', function () {
     
 });
 
-
 // Função para adicionar item
-function adicionarItem(serial, observacao, tipoDispositivo) {
-    const data = {
-        serial: serial,
-        observacao: observacao,
-        tipoDispositivo: tipoDispositivo
-    };
-
+function adicionarItem() {
+    const serial = document.getElementById('serial').value;
+    const observacao = document.getElementById('observacao').value;
+    const tipoDispositivo = document.getElementById('tipoDispositivo').value;
+    
     fetch('/adicionar', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serial, observacao, tipoDispositivo })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.status === 'success') {
-            exibirMensagem(data.message, 'success');
-        } else {
-            exibirMensagem(data.message, 'error');
+        if (data.mensagem) {
+            exibirMensagem(data.mensagem, 'sucesso');
+        } else if (data.erro) {
+            exibirMensagem(data.erro, 'erro');
         }
     })
-    .catch(error => {
-        console.error('Erro:', error);
-        exibirMensagem('Ocorreu um erro ao adicionar o item.', 'error');
-    });
+    .catch(error => exibirMensagem('Erro ao adicionar item: ' + error, 'erro'));
 }
 
 // Função para excluir item
-function excluirItem(serial) {
-    const data = {
-        mensagem: `Excluir ${serial}`
-    };
-
+function excluirItem() {
+    const mensagem = document.getElementById('mensagemExcluir').value;
+    
     fetch('/excluir', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensagem })
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            exibirMensagem(data.message, 'success');
-        } else {
-            exibirMensagem(data.message, 'error');
+            exibirMensagem(data.message, 'sucesso');
+        } else if (data.status === 'error') {
+            exibirMensagem(data.message, 'erro');
         }
     })
-    .catch(error => {
-        console.error('Erro:', error);
-        exibirMensagem('Ocorreu um erro ao excluir o item.', 'error');
-    });
+    .catch(error => exibirMensagem('Erro ao excluir item: ' + error, 'erro'));
 }
 
-function exibirMensagem(mensagem, tipo) {
-    const mensagemDiv = document.getElementById('mensagem');
-    mensagemDiv.textContent = mensagem;
-    mensagemDiv.className = `mensagem ${tipo}`;
-    mensagemDiv.style.display = 'block';
+document.getElementById('botaoAdicionar').addEventListener('click', adicionarItem);
+document.getElementById('botaoExcluir').addEventListener('click', excluirItem);
 
-    // Esconde a mensagem após alguns segundos
-    setTimeout(() => {
-        mensagemDiv.style.display = 'none';
-    }, 5000);
+
+// Função para exibir mensagens na tela
+function exibirMensagem(mensagem, tipo) {
+    const mensagemElemento = document.getElementById('mensagem');
+    mensagemElemento.textContent = mensagem;
+    mensagemElemento.className = tipo; // Defina a classe CSS para estilizar a mensagem (e.g., 'sucesso' ou 'erro')
 }

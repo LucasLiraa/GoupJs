@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             modeText.innerText = "Dark Mode";
         }
+        
+        // Atualizar o gráfico com as novas cores
+        updateChartColors();
     });
 
     // Atualizar conteúdo baseado na seleção de tipo de dispositivo
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
         switch (selectedValue) {
             case 'todos':
                 content = `
-                    <div class="dashboardCharts">
+                <div class="dashboardCharts">
                     <div class="dashboardChartsUp">
                         <div class="dashboardChartDetails">
                             <label>Com Detalhes</label>
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
                         <div class="dashboardChartAvailable">
                             <label>Total Disponível</label>
-                            <h1 id="totalLinhas"></h1>
+                            <h1 id="linhasPreenchidas"></h1>
                         </div>
                     </div>
                     <div class="dashboardChartsDown">
@@ -265,14 +268,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     datasets: [{
                         label: 'Total Disponível',
                         data: models.map(model => model.Quantidade),
-                        backgroundColor: '#695cfe98',
-                        borderColor: '#695CFE',
+                        backgroundColor: '#07547398',
+                        borderColor: '#075473',
                         borderWidth: 3,
                         borderRadius: 6
                     }]
                 },
                 options: {
-                    indexAxis: 'y', // Configura o gráfico para barras horizontais
+                    indexAxis: 'y',
                 }
             });
         } else {
@@ -280,7 +283,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }    
 });
-
 
 fetch('/get_device_info')
     .then(response => response.json())
@@ -294,35 +296,67 @@ fetch('/get_device_info')
             return acc;
         }, {});
 
-        const labels = Object.keys(ModelCounts);
-        const values = Object.values(ModelCounts);
+        const ModelLabels = Object.keys(ModelCounts);
+        const ModelValues = Object.values(ModelCounts);
 
         const ctx = document.getElementById('ChartsModels');
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: ModelLabels,
                 datasets: [{
                     label: 'Total Disponível',
-                    data: values,
-                    backgroundColor: '#695cfe98',
-                    borderColor: '#695CFE',
+                    data: ModelValues,
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
                     borderWidth: 3,
                     borderRadius: 6
                 }]
             },
             options: {
                 indexAxis: 'y', // Configura o gráfico para barras horizontais
+                plugins: {
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Desativa a exibição dos números no eixo X (horizontal)
+                        },
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo X (horizontal)
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo Y (vertical)
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 20,
+                        left: 30,
+                        right: 20
+                    },
+                }
             }
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 
-fetch('/get_device_info')
+    fetch('/get_device_info')
     .then(response => response.json())
     .then(data => {
+        // Filtrar dados para remover itens com a observação "Não possui"
+        const filteredData = data.filter(item => item['ObservacaoDispositivo'] !== 'Não possui');
+        
         // Contar a frequência de cada Tipo
-        const ObservationCounts = data.reduce((acc, item) => {
+        const ObservationCounts = filteredData.reduce((acc, item) => {
             const Observation = item['ObservacaoDispositivo'];
             if (Observation) {
                 acc[Observation] = (acc[Observation] || 0) + 1;
@@ -334,16 +368,16 @@ fetch('/get_device_info')
         const ObservationValues = Object.values(ObservationCounts);
 
         // Criar o gráfico de status
-        const ctxStatus = document.getElementById('ChartsObservations'); // Certifique-se de ter uma <canvas id="ChartsTypes"> no HTML
+        const ctxStatus = document.getElementById('ChartsObservations'); // Certifique-se de ter uma <canvas id="ChartsObservations"> no HTML
         new Chart(ctxStatus, {
             type: 'bar', // Tipo de gráfico, pode ser 'pie' ou 'doughnut'
             data: {
                 labels: ObservationLabels,
                 datasets: [{
-                    label: 'Total',
+                    label: 'Total Disponível',
                     data: ObservationValues,
-                    backgroundColor: '#695cfe98',
-                    borderColor: '#695CFE',
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
                     borderWidth: 3,
                     borderRadius: 6
                 }]
@@ -353,19 +387,35 @@ fetch('/get_device_info')
                 plugins: {
                     responsive: true,
                     legend: {
-                        position: 'right',
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Desativa a exibição dos números no eixo X (horizontal)
+                        },
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo X (horizontal)
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo Y (vertical)
+                        }
                     },
                 },
                 layout: {
                     padding: {
-                        top: 10,
-                        bottom: 20
-                    }
-                },
+                        top: 0,
+                        bottom: 16,
+                    },
+                }
             }
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
+
 
 
 fetch('/get_device_info')
@@ -392,21 +442,39 @@ fetch('/get_device_info')
                 datasets: [{
                     label: 'Total',
                     data: TypeValues,
-                    backgroundColor: '#695cfe98',
-                    borderColor: '#695CFE',
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
                     borderWidth: 3,
                     borderRadius: 6
                 }]
             },
-            options: {
-                layout: {
-                    padding: 0
-                },
+            options: { 
                 plugins: {
                     responsive: true,
                     legend: {
                         position: 'right',
                     },
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo X (horizontal)
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            display: false // Desativa a exibição dos números no eixo Y (vertical)
+                        },
+                        grid: {
+                            display: false // Desativa a exibição da grade no eixo Y (vertical)
+                        }
+                    },
+                },
+                layout: {
+                    padding: 25
                 }
             }
         });
@@ -416,16 +484,15 @@ fetch('/get_device_info')
 
 
 
-    function contarLinhas() {
-        fetch('/contar_linhas')
+    function contarLinhasPreenchidas() {
+        fetch('/contar_linhas_preenchidas')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('totalLinhas').textContent = data.linhas_preenchidas;
+                document.getElementById('linhasPreenchidas').textContent = data.linhas_preenchidas;
             })
-            .catch(error => console.error('Erro ao contar as linhas:', error));
+            .catch(error => console.error('Erro ao contar as linhas preenchidas:', error));
     }
-
-    contarLinhas();
+    contarLinhasPreenchidas();
 
     function contarLinhasComObservacao() {
         fetch('/contar_linhas_com_observacao')
@@ -435,5 +502,4 @@ fetch('/get_device_info')
             })
             .catch(error => console.error('Erro ao contar as linhas com observação:', error));
     }
-
     contarLinhasComObservacao();

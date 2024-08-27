@@ -3,7 +3,7 @@
 :root{
     --body-color: #E4E9F7;
     --sidebar-color: #FFF;
-    --primary-color: #695CFE;
+    --primary-color: #075473;
     --primary-color-light: #F6F5FF;
     --toggle-color: #DDD;
     --text-color: #707070;
@@ -301,8 +301,13 @@ h3{
 .dashboardCharts{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     margin: 20px;
     gap: 10px;
+
+    height: 80vh;
     
     background-color: var(--body-color);
 }
@@ -568,4 +573,26 @@ h3{
     transition: var(--tran-03);
 
     background-color: var(--primary-color);
+}
+
+.development{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100vh;
+    position: relative;
+    
+    left: 250px;
+    width: calc(100% - 250px);
+    background: var(--body-color);
+    transition: var(--tran-05);
+}
+.sideMenu.close~.development{
+    left: 88px;
+    width: calc(100% - 88px);
+}
+.developmentTitle h1{
+    text-align: center;
+    color: var(--text-color);
 }

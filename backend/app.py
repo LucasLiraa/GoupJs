@@ -10,7 +10,7 @@ FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../front
 
 # Caminhos para os arquivos de estoque
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório Personalizado 14-05-2024.xlsx')
+CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 25-07-24.xlsx')
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
 
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
@@ -21,6 +21,7 @@ def index():
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
+
 
 def verificSerial(mensagem):
     padrao = r'\b[A-Z0-9]{6,}\b'
@@ -84,6 +85,7 @@ def excluir_item(serial):
     else:
         return False
 
+
 @app.route('/adicionar', methods=['POST'])
 def adicionar_item():
     data = request.json
@@ -138,12 +140,9 @@ def excluir():
     if excluir_item(serial):
         return jsonify({'status': 'success', 'message': f'Item com serial {serial} excluído com sucesso'})
     else:
-        return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
-    
+        return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404 
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
     
-
-
 
 #COMEÇO BACKEND FUNCIONAMENTO DO DASHBOARD
 @app.route('/get_device_info', methods=['GET'])
@@ -156,29 +155,34 @@ def get_device_info():
     
     return jsonify(device_info)
 
+@app.route('/contar_linhas_preenchidas', methods=['GET'])
+def contar_linhas_preenchidas():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Contar todas as linhas que contêm pelo menos uma célula não vazia
+        linhas_preenchidas = df.dropna(how='all').shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_preenchidas': linhas_preenchidas})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas preenchidas: {e}'}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True)
-    
+@app.route('/contar_linhas_com_observacao', methods=['GET'])
+def contar_linhas_com_observacao():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'ObservacaoDispositivo' não é NaN e não contém 'Não possui'
+        filtro = df['ObservacaoDispositivo'].notna() & (df['ObservacaoDispositivo'] != 'Não possui')
+        linhas_com_observacao = df[filtro].shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_com_observacao': linhas_com_observacao})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas com observação: {e}'}), 500
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 if __name__ == '__main__':
     app.run(debug=True)
