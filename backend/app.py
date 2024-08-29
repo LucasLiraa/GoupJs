@@ -2,7 +2,6 @@ from flask import Flask, send_from_directory, request, jsonify
 import pandas as pd
 import os
 import re
-
 app = Flask(__name__)
 
 # Diretório do frontend
@@ -17,7 +16,6 @@ CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
 @app.route('/')
 def index():
     return send_from_directory(FRONTEND_DIR, 'index.html')
-
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
@@ -138,7 +136,7 @@ def excluir():
     
     # Chama a função de exclusão e verifica o resultado
     if excluir_item(serial):
-        return jsonify({'status': 'success', 'message': f'Item com serial {serial} excluído com sucesso'})
+        return jsonify({'status': 'success', 'message': f'Equipamento com serial {serial} excluído com sucesso'})
     else:
         return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404 
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS

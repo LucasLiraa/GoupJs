@@ -577,6 +577,7 @@ h3{
 
 .development{
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 
@@ -592,7 +593,36 @@ h3{
     left: 88px;
     width: calc(100% - 88px);
 }
+
 .developmentTitle h1{
     text-align: center;
+    font-size: 50px;
+    color: var(--text-color);
+    animation: icona 3s ease-in-out infinite;
+}
+
+.developmentTitle  .icona{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 200px;
+
+    border-radius: 10px;
+    animation: icona 3s ease-in-out infinite;
+
+    
+    color: var(--text-color);
+    transition: var(--tran-02);
+}
+
+@keyframes icona{
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-40px);
+    }
+}
+body.dark .developmentTitle:hover .icona{
     color: var(--text-color);
 }

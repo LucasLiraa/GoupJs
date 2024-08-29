@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     `;
                     break;
-            case 'perifericos':
+                case 'perifericos':
                 content = 'Periféricos';
                 break;
             default:
@@ -416,8 +416,6 @@ fetch('/get_device_info')
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 
-
-
 fetch('/get_device_info')
     .then(response => response.json())
     .then(data => {
@@ -474,15 +472,52 @@ fetch('/get_device_info')
                     },
                 },
                 layout: {
-                    padding: 25
+                    padding: {
+                        top: 0,
+                        bottom: 18,
+                    },
                 }
             }
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 
-
-
+    function displayMessage(message, type) {
+        // Cria um elemento para exibir a mensagem, caso ainda não exista
+        let messageDiv = document.getElementById('messageDiv');
+        
+        if (!messageDiv) {
+            messageDiv = document.createElement('div');
+            messageDiv.id = 'messageDiv';
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.padding = '10px 20px';
+            messageDiv.style.borderRadius = '5px';
+            messageDiv.style.zIndex = '1000';
+            document.body.appendChild(messageDiv);
+        }
+    
+        messageDiv.textContent = message;
+    
+        if (type === 'success') {
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.style.border = '1px solid #c3e6cb';
+        } else if (type === 'error') {
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.style.border = '1px solid #f5c6cb';
+        }
+    
+        // Exibe a mensagem
+        messageDiv.style.display = 'block';
+    
+        // Esconde a mensagem após 5 segundos
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    }
 
     function contarLinhasPreenchidas() {
         fetch('/contar_linhas_preenchidas')

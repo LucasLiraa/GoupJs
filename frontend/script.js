@@ -5,20 +5,19 @@ const body = document.querySelector("body"),
       modeSwtich = body.querySelector(".sideMenuToggle"),
       modeText = body.querySelector(".sideMenuModeText");
 
-      toggle.addEventListener("click", () =>{
-        sidebar.classList.toggle("close");
-      })
+toggle.addEventListener("click", () =>{
+    sidebar.classList.toggle("close");
+});
 
-      modeSwtich.addEventListener("click", () =>{
-        body.classList.toggle("dark");
+modeSwtich.addEventListener("click", () =>{
+    body.classList.toggle("dark");
 
-        if(body.classList.contains("dark")){
-            modeText.innerText = "Light Mode"
-        }else{
-            modeText.innerText = "Dark Mode"
-        }
-      })
-
+    if(body.classList.contains("dark")){
+        modeText.innerText = "Light Mode"
+    } else {
+        modeText.innerText = "Dark Mode"
+    }
+});
 
 // Funcionamento Forms
 document.addEventListener('DOMContentLoaded', function () {
@@ -78,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function adicionarSerial(serial, observacao, tipoDispositivo) {
-        // Aqui você pode enviar uma requisição para o backend
         fetch('/adicionar', {
             method: 'POST',
             headers: {
@@ -92,13 +90,22 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Adicionado com sucesso:', data);
+            if (data.erro) { // Verifica se a resposta contém um erro
+                console.log('Erro ao adicionar:', data);
+                exibirMensagem('Erro: ' + data.erro, 'erro');
+            } else if (data.mensagem) { // Verifica se há uma mensagem de sucesso
+                console.log('Adicionado com sucesso:', data);
+                exibirMensagem(data.mensagem, 'sucesso');
+            } else {
+                exibirMensagem('Resposta inesperada do servidor.', 'erro');
+            }
         })
         .catch((error) => {
             console.error('Erro ao adicionar:', error);
+            exibirMensagem('Erro ao adicionar equipamento.', 'erro');
         });
     }
-
+    
     function excluirSerial(serial) {
         const mensagem = `Excluir ${serial}`;
         fetch('/excluir', {
@@ -110,64 +117,33 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Excluído com sucesso:', data);
+            console.log('Resposta do backend:', data); // Log detalhado da resposta
+    
+            if (data.status === 'success') {
+                exibirMensagem(data.message, 'sucesso');
+            } else {
+                exibirMensagem('Erro: ' + data.message, 'erro');
+            }
         })
         .catch((error) => {
             console.error('Erro ao excluir:', error);
+            exibirMensagem('Erro ao excluir equipamento.', 'erro');
         });
     }
     
+    
+    
 });
-
-// Função para adicionar item
-function adicionarItem() {
-    const serial = document.getElementById('serial').value;
-    const observacao = document.getElementById('observacao').value;
-    const tipoDispositivo = document.getElementById('tipoDispositivo').value;
-    
-    fetch('/adicionar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serial, observacao, tipoDispositivo })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.mensagem) {
-            exibirMensagem(data.mensagem, 'sucesso');
-        } else if (data.erro) {
-            exibirMensagem(data.erro, 'erro');
-        }
-    })
-    .catch(error => exibirMensagem('Erro ao adicionar item: ' + error, 'erro'));
-}
-
-// Função para excluir item
-function excluirItem() {
-    const mensagem = document.getElementById('mensagemExcluir').value;
-    
-    fetch('/excluir', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mensagem })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            exibirMensagem(data.message, 'sucesso');
-        } else if (data.status === 'error') {
-            exibirMensagem(data.message, 'erro');
-        }
-    })
-    .catch(error => exibirMensagem('Erro ao excluir item: ' + error, 'erro'));
-}
-
-document.getElementById('botaoAdicionar').addEventListener('click', adicionarItem);
-document.getElementById('botaoExcluir').addEventListener('click', excluirItem);
-
 
 // Função para exibir mensagens na tela
 function exibirMensagem(mensagem, tipo) {
     const mensagemElemento = document.getElementById('mensagem');
     mensagemElemento.textContent = mensagem;
-    mensagemElemento.className = tipo; // Defina a classe CSS para estilizar a mensagem (e.g., 'sucesso' ou 'erro')
+    mensagemElemento.className = tipo; // Adiciona a classe para estilo (sucesso ou erro)
+
+    // Remove a mensagem após 5 segundos (5000 milissegundos)
+    setTimeout(() => {
+        mensagemElemento.textContent = '';
+        mensagemElemento.className = ''; // Remove a classe para limpar o estilo
+    }, 5000);
 }

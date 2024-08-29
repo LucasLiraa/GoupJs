@@ -4,6 +4,7 @@
     --body-color: #E4E9F7;
     --sidebar-color: #FFF;
     --primary-color: #075473;
+    --primary-color-dark: #075473;
     --primary-color-light: #F6F5FF;
     --toggle-color: #DDD;
     --text-color: #707070;
@@ -31,6 +32,7 @@ body.dark{
     --body-color: #18191A;
     --sidebar-color: #242526;
     --primary-color: #3A3B3C;
+    --primary-color-dark: #075473;
     --primary-color-light: #3A3B3C;
     --toggle-color: #FFF;
     --text-color: #CCC;
@@ -61,7 +63,6 @@ body.dark{
     white-space: nowrap;
     opacity: 1;
 }
-
 .sideMenu.close .sideMenuText{
     opacity: 0;
 }
@@ -71,7 +72,6 @@ body.dark{
     align-items: center;
     justify-content: center;
 }
-
 .sideMenu li{
     height: 50px;
     margin-top: 10px;
@@ -102,7 +102,6 @@ body.dark{
     display: flex;
     align-items: center;
 }
-
 header .sideMenuImage .sideMenuHeaderText{
     display: flex;
     flex-direction: column;
@@ -181,7 +180,6 @@ body.dark .sideMenu li a:hover .sideMenuText{
     flex-direction: column;
     justify-content: space-between;
 }
-
 .sideMenuOptions .sideMenuMode{
     position: relative;
     border-radius: 6px;
@@ -200,14 +198,12 @@ body.dark .sideMenu li a:hover .sideMenuText{
 .sideMenuOptions .sideMenuMode i.sun{
     opacity: 0;
 }
-
 body.dark .sideMenuOptions .sideMenuMode i.sun{
     opacity: 1;
 }
 body.dark .sideMenuOptions .sideMenuMode i.moon{
     opacity: 0;
 }
-
 .sideMenuOptions .sideMenuMode .sideMenuToggle{
     position: absolute;
     right: 0;
@@ -220,7 +216,6 @@ body.dark .sideMenuOptions .sideMenuMode i.moon{
     background: var(--primary-color-light);
     background: var(--primary-color-light);
 }
-
 .sideMenuToggle .sideMenuSwitch{
     position:relative;
     height: 22px;
@@ -229,7 +224,6 @@ body.dark .sideMenuOptions .sideMenuMode i.moon{
     background: var(--toggle-color);
     transition: var(--tran-05);
 }
-
 .sideMenuSwitch::before{
     content: '';
     position: absolute;
@@ -242,7 +236,6 @@ body.dark .sideMenuOptions .sideMenuMode i.moon{
     background: var(--sidebar-color);
     transition: var(--tran-03);
 }
-
 body.dark .sideMenuSwitch::before{
     left: 24px;
 }
@@ -344,6 +337,11 @@ body.dark .sideMenuSwitch::before{
     background: var(--primary-color-light);
 }
 
+#tipoDispositivo {
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+}
+
 .stockControButtons{
     display: flex;
     flex-direction: row;
@@ -356,34 +354,33 @@ body.dark .sideMenuSwitch::before{
     height: 50px;
     border: none;
     border-radius: 10px;
-    color: var(--body-color);
-    background-color: var(--primary-color);
+    color: var(--toggle-color);
+    background-color: var(--primary-color-dark);
     transition: var(--tran-05);
 }
 
 .stockControButtons button:hover{
     cursor: pointer;
-    color: var(--text-color);
+    color: var(--toggle-color);
     background-color: var(--body-color);
 }
-
 #observacaoDiv, #tipoDispositivoDiv, #submitButton{
     display: none;
 }
-
-.mensagem {
-    display: none; /* Inicialmente escondido */
+.sucesso {
+    color: green;
+    border: 1px solid green;
+    border-radius: 6px;
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
 
-.mensagem.success {
-    background-color: #4CAF50;
-    color: var(--primary-color-light)
 }
-
-.mensagem.error {
-    background-color: #f44336;
-    color: var(--primary-color-light)
+.erro {
+    color: red;
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
 }
