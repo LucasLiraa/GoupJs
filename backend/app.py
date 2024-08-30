@@ -142,7 +142,7 @@ def excluir():
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
     
 
-#COMEÇO BACKEND FUNCIONAMENTO DO DASHBOARD
+#COMEÇO DASHBOARD FILTOS DE TODOS
 @app.route('/get_device_info', methods=['GET'])
 def get_device_info():
     # Carregue os dados da sua planilha Excel
@@ -169,6 +169,7 @@ def contar_linhas_preenchidas():
 
 @app.route('/contar_linhas_com_observacao', methods=['GET'])
 def contar_linhas_com_observacao():
+    
     try:
         # Carregar o DataFrame da planilha Excel
         df = pd.read_excel(CAMINHO_ESTOQUE)
@@ -181,6 +182,49 @@ def contar_linhas_com_observacao():
         return jsonify({'linhas_com_observacao': linhas_com_observacao})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação: {e}'}), 500
+#FINAL DASHBOARD FILTROS DOS DESKTOPS
+
+
+#COMEÇO DASHBOARD FILTROS DOS DESKTOPS
+@app.route('/contar_linhas_desktops', methods=['GET'])
+def contar_linhas_desktops():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Desktop'
+        df_desktops = df[df['TipoDispositivo'] == 'Desktop']
+        
+        # Contar as linhas filtradas
+        linhas_desktops = df_desktops.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_desktops': linhas_desktops})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas de desktops: {e}'}), 500
+
+@app.route('/contar_linhas_com_observacao_desktop', methods=['GET'])
+def contar_linhas_com_observacao_desktop():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Desktop', 'Observacao' não está vazia e não é 'Não possui'
+        df_filtrado = df[
+            (df['TipoDispositivo'] == 'Desktop') &
+            (df['ObservacaoDispositivo'].notna()) &
+            (df['ObservacaoDispositivo'] != 'Não possui')
+        ]
+        
+        # Contar as linhas filtradas
+        linhas_com_observacao_desktop = df_filtrado.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_com_observacao_desktop': linhas_com_observacao_desktop})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas com observação e Desktop: {e}'}), 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
