@@ -312,7 +312,7 @@ body.dark .sideMenuSwitch::before{
     color: var(--primary-color-light);
     background-color: var(--primary-color);
 }
-.dashboardFilters .button1{
+.dashboardFilters .button2{
     color: var(--toggle-color);
     background-color: var(--primary-color);
 }
@@ -329,7 +329,7 @@ body.dark .sideMenuSwitch::before{
     border: 1px solid var(--text-color);
     background-color: var(--body-color);
 }
-.dashboardChartsUpAll{
+.dashboardChartsUpDesk{
     display: flex;
     flex-direction: row;
 
@@ -338,13 +338,14 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-around;
 }
-.dashboardChartDetailsAll,
-.dashboardChartAvailableAll{
+.dashboardChartAvailableDesk,
+.dashboardChartDetailsCDesk,
+.dashboardChartUseDesk{
     display: flex;
     flex-direction: column;
     position: relative;
 
-    width: 48%;
+    width: 32%;
     height: 120px;
     margin: 10px;
 
@@ -356,8 +357,9 @@ body.dark .sideMenuSwitch::before{
     border: 1px solid var(--text-color);
 
 }
-.dashboardChartDetailsAll label,
-.dashboardChartAvailableAll label{
+.dashboardChartAvailableDesk label,
+.dashboardChartDetailsCDesk label,
+.dashboardChartUseDesk label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -372,13 +374,14 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     background-color: var(--primary-color-light);
 }
-.dashboardChartDetailsAll h1,
-.dashboardChartAvailableAll h1{
+.dashboardChartAvailableDesk h1,
+.dashboardChartDetailsCDesk h1,
+.dashboardChartUseDesk h1{
     font-size: 36px;
     color: var(--text-color);
 }
 
-.dashboardChartsDownAll{
+.dashboardChartsDownDesk{
     display: flex;
     flex-direction: row;
 
@@ -388,7 +391,7 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-around;
 }
-.dashboardChartsLeftAll{
+.dashboardChartsLeftDesk{
     position: relative;
 
     width: 48%;
@@ -401,7 +404,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 10px;
     border: 1px solid var(--text-color);
 }
-.dashboardChartsModelsAll label{
+.dashboardChartsLeftDesk label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -416,11 +419,11 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     background-color: var(--primary-color-light);
 }
-.dashboardChartsModelsAll h1{
+.dashboardChartsLeftDesk h1{
     font-size: 36px;
     color: var(--text-color);
 }
-.dashboardChartsRightAll{
+.dashboardChartsRightDesk{
     display: flex;
     flex-direction: column;
 
@@ -431,14 +434,31 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: center;
 }
-.dashboardChartStatsAll,
-.dashboardChartAmountAll{
+.dashboardChartsRightUpDesk{
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 50%;
+    
+    gap: 10px;
+}
+.dashboardChartsRightDownDesk{
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 50%;
+    
+    gap: 10px;
+}
+.dashboardChartDetailsDesk{
     display: flex;
     flex-direction: column;
     position: relative;
 
-    width: 100%;
-    height: 300px;
+    width: 60%;
+    height: 100%;
 
     align-items: center;
     justify-content: center;
@@ -447,8 +467,56 @@ body.dark .sideMenuSwitch::before{
     border-radius: 10px;
     border: 1px solid var(--text-color);
 }
-.dashboardChartStatsAll label,
-.dashboardChartAmountAll label{
+.dashboardChartStorangeDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 40%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartRamDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 40%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartProcessorDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 60%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+
+.dashboardChartDetailsDesk label,
+.dashboardChartStorangeDesk label,
+.dashboardChartRamDesk label,
+.dashboardChartProcessorDesk label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -462,78 +530,4 @@ body.dark .sideMenuSwitch::before{
 
     color: var(--text-color);
     background-color: var(--primary-color-light);
-}
-.dashboardChartStatsAll h1,
-.dashboardChartAmountAll h1{
-    font-size: 36px;
-    color: var(--text-color);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.development{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    height: 100vh;
-    position: relative;
-    
-    left: 250px;
-    width: calc(100% - 250px);
-    background: var(--body-color);
-    transition: var(--tran-05);
-}
-.sideMenu.close~.development{
-    left: 88px;
-    width: calc(100% - 88px);
-}
-
-.developmentTitle h1{
-    text-align: center;
-    font-size: 50px;
-    color: var(--text-color);
-    animation: icona 3s ease-in-out infinite;
-}
-
-.developmentTitle  .icona{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 200px;
-
-    border-radius: 10px;
-    animation: icona 3s ease-in-out infinite;
-
-    
-    color: var(--text-color);
-    transition: var(--tran-02);
-}
-
-@keyframes icona{
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-40px);
-    }
-}
-body.dark .developmentTitle:hover .icona{
-    color: var(--text-color);
 }

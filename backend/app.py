@@ -182,7 +182,7 @@ def contar_linhas_com_observacao():
         return jsonify({'linhas_com_observacao': linhas_com_observacao})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação: {e}'}), 500
-#FINAL DASHBOARD FILTROS DOS DESKTOPS
+#FINAL DASHBOARD FILTROS DE TODOS
 
 
 #COMEÇO DASHBOARD FILTROS DOS DESKTOPS
@@ -223,6 +223,46 @@ def contar_linhas_com_observacao_desktop():
         return jsonify({'linhas_com_observacao_desktop': linhas_com_observacao_desktop})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação e Desktop: {e}'}), 500
+#FINAL DASHBOARD FILTROS DOS DESKTOPS    
+
+#COMEÇO DASHBOARD FILTROS DOS NOTEBOOKS
+@app.route('/contar_linhas_notebooks', methods=['GET'])
+def contar_linhas_notebooks():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook'
+        df_desktops = df[df['TipoDispositivo'] == 'Notebook']
+        
+        # Contar as linhas filtradas
+        linhas_notebooks = df_desktops.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_notebooks': linhas_notebooks})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas de notebooks: {e}'}), 500
+
+@app.route('/contar_linhas_com_observacao_notebook', methods=['GET'])
+def contar_linhas_com_observacao_notebook():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook', 'Observacao' não está vazia e não é 'Não possui'
+        df_filtrado = df[
+            (df['TipoDispositivo'] == 'Notebook') &
+            (df['ObservacaoDispositivo'].notna()) &
+            (df['ObservacaoDispositivo'] != 'Não possui')
+        ]
+        
+        # Contar as linhas filtradas
+        linhas_com_observacao_notebook = df_filtrado.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_com_observacao_notebook': linhas_com_observacao_notebook})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
 
 
 

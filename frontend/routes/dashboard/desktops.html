@@ -4,10 +4,10 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <title>Dashboard | Estoque</title>
+            <title>Dashboard | Desktops</title>
             
-            <link rel="shortcut icon" href="../imgs/logo.ico">
-            <link rel="stylesheet" href="../styles/dashboard.css">
+            <link rel="shortcut icon" href="../../imgs/logo.ico">
+            <link rel="stylesheet" href="./styles/desktops.css">
             <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
         </head>
@@ -17,7 +17,7 @@
             <header>
                 <div class="sideMenuImage">
                     <span class="sideImage">
-                        <img src="../imgs/logo.png" alt="">
+                        <img src="../../imgs/logo.png" alt="">
                     </span>
 
                     <div class="sideMenuText sideMenuHeaderText">
@@ -37,7 +37,7 @@
                     </li>
                     <ul class="sideMenuLinks">
                         <li class="sideMenuNav">
-                            <a href="../index.html">
+                            <a href="../../index.html">
                                 <i class='bx bx-edit icon'></i>
                                 <span class="sideMenuText sideMenuNavText">Controle</span> 
                             </a>
@@ -49,13 +49,13 @@
                             </a>
                         </li>
                         <li class="sideMenuNav">
-                            <a href="./reposicao.html">
+                            <a href="../../pages/reposicao.html">
                                 <i class='bx bxs-dollar-circle icon'></i>
                                 <span class="sideMenuText sideMenuNavText">Reposição</span> 
                             </a>
                         </li>
                         <li class="sideMenuNav">
-                            <a href="./descartes.html">
+                            <a href="../../pages/descartes.html">
                                 <i class='bx bxs-trash-alt icon'></i>
                                 <span class="sideMenuText sideMenuNavText">Descartes</span> 
                             </a>
@@ -89,52 +89,68 @@
         <section class="sectionDashboard">
             <div class="dashboard">
                 <div class="dashboardTitle">
-                    <h1>Dashboard de Estoque</h1>
+                    <h1>Dashboard | Desktops</h1>
                 </div>
                 
                 <div class="dashboardFilters">
                     <ul>
-                        <li><a href="#"><button class="button1">Todos</button></a></li>
-                        <li><a href="../routes/dashboard/desktops.html"><button class="button2">Desktops</button></a></li>
-                        <li><a href="../routes/dashboard/notebooks.html"><button class="button3">Notebooks</button></a></li>
+                        <li><a href="../../pages/dashboard.html"><button class="button1">Todos</button></a></li>
+                        <li><a href="#"><button class="button2">Desktops</button></a></li>
+                        <li><a href="../../routes/dashboard/notebooks.html"><button class="button3">Notebooks</button></a></li>
                     </ul>
                 </div>
 
                 <div class="dashboardCharts">
-                    <div class="dashboardChartsUpAll">
-                        <div class="dashboardChartDetailsAll">
-                            <label>Com Detalhes</label>
-                            <h1 id="linhasObservacao"></h1>
-                        </div>
-                        <div class="dashboardChartAvailableAll">
+                    <div class="dashboardChartsUpDesk">
+                        <div class="dashboardChartAvailableDesk">
                             <label>Total Disponível</label>
-                            <h1 id="linhasPreenchidas"></h1>
+                            <h1 id="linhasDesktops"></h1>
+                        </div>
+                        <div class="dashboardChartDetailsCDesk">
+                            <label>Com Detalhes</label>
+                            <h1 id="linhasObservacaoDesktop"></h1>
+                        </div>
+                        <div class="dashboardChartUseDesk">
+                            <label>Pronto para Uso</label>
+                            <h1 id="resultadodesktop"></h1>
                         </div>
                     </div>
-                    <div class="dashboardChartsDownAll">
-                        <div class="dashboardChartsLeftAll">
-                            <div class="dashboardChartsModelsAll">
+                    <div class="dashboardChartsDownDesk">
+                        <div class="dashboardChartsLeftDesk">
+                            <div class="dashboardChartsModelsDesk">
                                 <label>Modelos</label>
-                                <canvas id="ChartsModels"></canvas>
+                                <canvas id="ChartsModelDesktop"></canvas>
                             </div>
                         </div>
-                        <div class="dashboardChartsRightAll">
-                            <div class="dashboardChartStatsAll">
-                                <label>Status</label>
-                                <canvas id="ChartsObservations" style="width: 420px;"></canvas>
+                        <div class="dashboardChartsRightDesk">
+                            <div class="dashboardChartsRightUpDesk">
+                                <div class="dashboardChartDetailsDesk">
+                                    <label>Detalhes</label>
+                                    <canvas id="ChartsObservationsDesktops"></canvas>
+                                </div>
+                                <div class="dashboardChartStorangeDesk">
+                                    <label>Armazenamento</label>
+                                    <canvas id="ChartsStorangeDesktops"></canvas>
+                                </div>
                             </div>
-                            <div class="dashboardChartAmountAll">
-                                <label>Disponíveis</label>
-                                <canvas id="ChartsTypes"></canvas>
+                            <div class="dashboardChartsRightDownDesk">
+                                <div class="dashboardChartRamDesk">
+                                    <label>Memória</label>
+                                    <canvas id="ChartsMemoryDesktops"></canvas>
+                                </div>
+                                <div class="dashboardChartProcessorDesk">
+                                    <label>Processador</label>
+                                    <canvas id="ChartsProcessorDesktop"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
-
-        <script src="../scripts/dashboard.js"></script>
+        <script src="../../scripts/dashboard.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>
