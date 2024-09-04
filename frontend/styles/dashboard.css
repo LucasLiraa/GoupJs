@@ -299,6 +299,12 @@ body.dark .sideMenuSwitch::before{
     outline: none;
     border: none;
 }
+.dashboardFilters h3{
+    display: flex;
+    align-items: flex-end;
+    margin-right: -10px;
+    color: var(--text-color);
+}
 
 
 .dashboardCharts{
