@@ -86,10 +86,67 @@
             </div>
         </nav>
 
-        <section class="development">
-            <div class="developmentTitle">
-                <i class='bx bxs-ghost icona'></i>
-                <h1>Página em desenvolvimento...</h1>
+        <section class="sectionDashboard">
+            <div class="dashboard">
+                <div class="dashboardTitle">
+                    <h1>Dashboard | Notebooks</h1>
+                </div>
+                
+                <div class="dashboardFilters">
+                    <select id="deviceType" name="deviceType" onchange="navigateToLink()">
+                        <option value="">Notebooks</option>
+                        <option value="../../pages/dashboard.html">Todos</option>
+                        <option value="./desktops.html.html">Desktops</option>
+                    </select>
+                </div>
+
+                <div class="dashboardCharts">
+                    <div class="dashboardChartsUpDesk">
+                        <div class="dashboardChartAvailableDesk">
+                            <label>Total Disponível</label>
+                            <h1 id="linhasNotebooks"></h1>
+                        </div>
+                        <div class="dashboardChartDetailsCDesk">
+                            <label>Com Detalhes</label>
+                            <h1 id="linhasObservacaoNotebook"></h1>
+                        </div>
+                        <div class="dashboardChartUseDesk">
+                            <label>Pronto para Uso</label>
+                            <h1 id="resultadonotebooks"></h1>
+                        </div>
+                    </div>
+                    <div class="dashboardChartsDownDesk">
+                        <div class="dashboardChartsLeftDesk">
+                            <div class="dashboardChartsModelsDesk">
+                                <label>Modelos</label>
+                                <canvas id="ChartsModelNotebooks"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboardChartsRightDesk">
+                            <div class="dashboardChartsRightUpDesk">
+                                <div class="dashboardChartDetailsDesk">
+                                    <label>Detalhes</label>
+                                    <canvas id="ChartsObservationsNotebooks"></canvas>
+                                </div>
+                                <div class="dashboardChartStorangeDesk">
+                                    <label>Armazenamento</label>
+                                    <canvas id="ChartsStorangeNotebooks"></canvas>
+                                </div>
+                            </div>
+                            <div class="dashboardChartsRightDownDesk">
+                                <div class="dashboardChartRamDesk">
+                                    <label>Memória</label>
+                                    <canvas id="ChartsMemoryNotebooks"></canvas>
+                                </div>
+                                <div class="dashboardChartProcessorDesk">
+                                    <label>Processador</label>
+                                    <canvas id="ChartsProcessorNotebooks"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 

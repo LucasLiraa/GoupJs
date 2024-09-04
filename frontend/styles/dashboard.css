@@ -277,44 +277,27 @@ body.dark .sideMenuSwitch::before{
 }
 
 .dashboardFilters{ 
-    width: 100%;
-
-    margin-bottom: -1px;
-}
-.dashboardFilters ul{
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
 
     width: 100%;
-
-    margin-top: 10px;
-    gap: 20px;
-    list-style: none;
+    margin: 20px 0 10px 0;
 }
-.dashboardFilters button{
-    width: 120px;
-    font-size: 18px;
-    cursor: pointer;
+.dashboardFilters select{
+    width: 200px;
+    height: 50px;
 
-    border-radius: 10px 10px 0 0;
-    border: 1px solid var(--text-color);
-    border-bottom: none;
-    color: var(--text-color);
-    background-color: var(--body-color);
+    border-radius: 6px;
+    margin-left: 20px;
+    font-size: 20px;
 
-    box-shadow: 14px 0px 20px -3px rgba(0,0,0,0.51);
-    -webkit-box-shadow: 14px 0px 20px -3px rgba(0,0,0,0.51);
-    -moz-box-shadow: 14px 0px 20px -3px rgba(0,0,0,0.51);
-
-    transition: var(--tran-04);
-}
-.dashboardFilters button:hover{
-    color: var(--primary-color-light);
-    background-color: var(--primary-color);
-}
-.dashboardFilters .button1{
     color: var(--toggle-color);
     background-color: var(--primary-color);
+    
+    cursor: pointer;
+    outline: none;
+    border: none;
 }
 
 
@@ -326,7 +309,6 @@ body.dark .sideMenuSwitch::before{
     justify-content: center;
 
     border-radius: 0 10px 10px 10px;
-    border: 1px solid var(--text-color);
     background-color: var(--body-color);
 }
 .dashboardChartsUpAll{

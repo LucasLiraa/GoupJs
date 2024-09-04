@@ -93,11 +93,11 @@
                 </div>
                 
                 <div class="dashboardFilters">
-                    <ul>
-                        <li><a href="../../pages/dashboard.html"><button class="button1">Todos</button></a></li>
-                        <li><a href="#"><button class="button2">Desktops</button></a></li>
-                        <li><a href="../../routes/dashboard/notebooks.html"><button class="button3">Notebooks</button></a></li>
-                    </ul>
+                    <select id="deviceType" name="deviceType" onchange="navigateToLink()">
+                        <option value="">Desktops</option>
+                        <option value="../../pages/dashboard.html">Todos</option>
+                        <option value="./notebooks.html">Notebooks</option>
+                    </select>
                 </div>
 
                 <div class="dashboardCharts">

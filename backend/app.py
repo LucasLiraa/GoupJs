@@ -12,6 +12,37 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 25-07-24.xlsx')
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
 
+
+def consultEstoque(Serial):
+    try:
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        if Serial:
+            resultado = df[df['SerialDispositivo'] == Serial]
+            if not resultado.empty:
+                # Obtém todos os valores da linha correspondente ao serial
+                linha = resultado.iloc[0]
+                return True, linha.to_dict()
+        return False, None
+    except Exception as e:
+        return False, f"Erro ao consultar a planilha de estoque: {e}"
+
+@app.route('/consulta_estoque', methods=['POST'])
+def consulta_estoque():
+    data = request.json
+    serial = verificSerial(data.get('mensagem'))
+    if serial:
+        encontrado, resultado = consultEstoque(serial)
+        if encontrado:
+            return jsonify(resultado)
+        else:
+            return jsonify({"erro": "Serial não encontrado na planilha de estoque."})
+    return jsonify({"erro": "Serial não encontrado na mensagem."})
+
+def verificSerial(mensagem):
+    # Função para verificar e extrair o serial da mensagem
+    # Aqui você deve adaptar a função para a lógica específica de extração do serial
+    return mensagem
+
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/')
 def index():
@@ -263,8 +294,7 @@ def contar_linhas_com_observacao_notebook():
         return jsonify({'linhas_com_observacao_notebook': linhas_com_observacao_notebook})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
-
-
+#FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
 
 if __name__ == '__main__':
     app.run(debug=True)
