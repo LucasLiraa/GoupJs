@@ -19,6 +19,30 @@ modeSwtich.addEventListener("click", () =>{
     }
 });
 
+//Funcionamento Pesquisa
+document.getElementById('serialInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        buscarSerial();
+    }
+});
+function buscarSerial() {
+    const serial = document.getElementById('serialInput').value;
+    fetch(`http://localhost:5000/buscar_serial?serial=${serial}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);
+        } else {
+            alert(`Serial: ${data.SerialDispositivo}\nNome: ${data.NomeDispositivo}\nModelo: ${data.ModeloDispositivo}
+                \nProcessador: ${data.ProcessadorUsado}\nMemória: ${data.MemoriaTotal}\nArmazenamento: ${data.ArmazenamentoInterno}
+                \nObservação: ${data.ObservacaoDispositivo}`);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
+}
+
 // Funcionamento Forms
 document.addEventListener('DOMContentLoaded', function () {
     const serialInput = document.getElementById('serial');

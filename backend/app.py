@@ -13,40 +13,24 @@ CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 25
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
 
 
-def consultEstoque(Serial):
-    try:
-        df = pd.read_excel(CAMINHO_ESTOQUE)
-        if Serial:
-            resultado = df[df['SerialDispositivo'] == Serial]
-            if not resultado.empty:
-                # Obtém todos os valores da linha correspondente ao serial
-                linha = resultado.iloc[0]
-                return True, linha.to_dict()
-        return False, None
-    except Exception as e:
-        return False, f"Erro ao consultar a planilha de estoque: {e}"
-
-@app.route('/consulta_estoque', methods=['POST'])
-def consulta_estoque():
-    data = request.json
-    serial = verificSerial(data.get('mensagem'))
-    if serial:
-        encontrado, resultado = consultEstoque(serial)
-        if encontrado:
-            return jsonify(resultado)
-        else:
-            return jsonify({"erro": "Serial não encontrado na planilha de estoque."})
-    return jsonify({"erro": "Serial não encontrado na mensagem."})
-
-def verificSerial(mensagem):
-    # Função para verificar e extrair o serial da mensagem
-    # Aqui você deve adaptar a função para a lógica específica de extração do serial
-    return mensagem
+@app.route('/buscar_serial', methods=['GET'])
+def buscar_serial():
+    serial = request.args.get('serial')
+    df = pd.read_excel(CAMINHO_ESTOQUE)
+    dispositivo = df[df['SerialDispositivo'] == serial][['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo',
+                                                         'ProcessadorUsado','MemoriaTotal','ArmazenamentoInterno',
+                                                         'ObservacaoDispositivo','TipoDispositivo']]
+    if not dispositivo.empty:
+        info = dispositivo.to_dict(orient='records')[0]
+        return jsonify(info)
+    else:
+        return jsonify({'message': 'Serial não encontrado'})
 
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/')
 def index():
     return send_from_directory(FRONTEND_DIR, 'index.html')
+
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)

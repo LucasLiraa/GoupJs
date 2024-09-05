@@ -154,6 +154,11 @@ body.dark .sideMenu header .toggle{
     transition: var(--tran-05);
     color: var(--text-color);
 }
+.sideMenuSearch button{
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 .sideMenu li a{
     height: 100%;
     width: 100%;
