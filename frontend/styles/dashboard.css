@@ -286,7 +286,7 @@ body.dark .sideMenuSwitch::before{
 }
 .dashboardFilters select{
     width: 200px;
-    height: 50px;
+    height: 36px;
 
     border-radius: 6px;
     margin-left: 20px;
