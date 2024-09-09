@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+    <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <title>Dashboard | Desktops</title>
+            
+            <link rel="shortcut icon" href="../imgs/logo.ico">
+            <link rel="stylesheet" href="./dashboard/styles/desktops.css">
+            <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+        </head>
+    <body>
+
+        <nav class="sideMenu close">
+            <header>
+                <div class="sideMenuImage">
+                    <span class="sideImage">
+                        <img src="../imgs/logo.png" alt="">
+                    </span>
+
+                    <div class="sideMenuText sideMenuHeaderText">
+                        <span class="sideMenuName">Controle Estoque</span>
+                        <span class="sideMenuProfession">Lucas Lira</span>
+                    </div>
+                </div>
+
+                <i class='bx bx-chevron-right toggle'></i>
+            </header>
+
+            <div class="sideMenuOptions">
+                <div class="sideMenuSelections">
+                    <li class="sideMenuSearch">
+                            <i class='bx bx-search icon'></i>
+                            <input type="text" placeholder="Procurar..."> 
+                    </li>
+                    <ul class="sideMenuLinks">
+                        <li class="sideMenuNav">
+                            <a href="../index.html">
+                                <i class='bx bx-edit icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Controle</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="#">
+                                <i class='bx bx bxs-dashboard icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Dashboard</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="../pages/reposicao.html">
+                                <i class='bx bxs-dollar-circle icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Reposição</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="../pages/descartes.html">
+                                <i class='bx bxs-trash-alt icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Descartes</span> 
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sideMenuBottom">
+                    <li class="sideMenuNav">
+                        <a href="#">
+                            <i class='bx bx-log-out icon' ></i>
+                            <span class="sideMenuText sideMenuNavText">Logout</span> 
+                        </a>
+                    </li>
+
+                    <li class="sideMenuMode">
+                        <div class="moon-sun">
+                            <i class='bx bx-moon icon moon'></i>
+                            <i class='bx bx-sun icon sun'></i>
+                        </div>
+                        <span class="sideMenuModeText sideMenuText">Dark Mode</span>
+
+                        <div class="sideMenuToggle">
+                            <span class="sideMenuSwitch"></span>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </nav>
+
+        <section class="sectionDashboard">
+            <div class="dashboard">
+                <div class="dashboardTitle">
+                    <h1>Dashboard | Desktops</h1>
+                </div>
+                
+                <div class="dashboardFilters">
+                    <h3>Selecione os Equipamentos:</h3>
+                    <select id="deviceType" name="deviceType" onchange="navigateToLink()">
+                        <option value="">Desktops</option>
+                        <option value="../pages/dashboard.html">Todos</option>
+                        <option value="./notebooks.html">Notebooks</option>
+                    </select>
+                </div>
+
+                <div class="dashboardCharts">
+                    <div class="dashboardChartsUpDesk">
+                        <div class="dashboardChartAvailableDesk">
+                            <label>Total Disponível</label>
+                            <h1 id="linhasDesktops"></h1>
+                        </div>
+                        <div class="dashboardChartDetailsCDesk">
+                            <label>Com Detalhes</label>
+                            <h1 id="linhasObservacaoDesktop"></h1>
+                        </div>
+                        <div class="dashboardChartUseDesk">
+                            <label>Pronto para Uso</label>
+                            <h1 id="resultadodesktop"></h1>
+                        </div>
+                    </div>
+                    <div class="dashboardChartsDownDesk">
+                        <div class="dashboardChartsLeftDesk">
+                            <div class="dashboardChartsModelsDesk">
+                                <label>Modelos</label>
+                                <canvas id="ChartsModelDesktop"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboardChartsRightDesk">
+                            <div class="dashboardChartsRightUpDesk">
+                                <div class="dashboardChartDetailsDesk">
+                                    <label>Detalhes</label>
+                                    <canvas id="ChartsObservationsDesktops"></canvas>
+                                </div>
+                                <div class="dashboardChartStorangeDesk">
+                                    <label>Armazenamento</label>
+                                    <canvas id="ChartsStorangeDesktops"></canvas>
+                                </div>
+                            </div>
+                            <div class="dashboardChartsRightDownDesk">
+                                <div class="dashboardChartRamDesk">
+                                    <label>Memória</label>
+                                    <canvas id="ChartsMemoryDesktops"></canvas>
+                                </div>
+                                <div class="dashboardChartProcessorDesk">
+                                    <label>Processador</label>
+                                    <canvas id="ChartsProcessorDesktop"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <script src="../../scripts/dashboard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </body>
+</html>
