@@ -280,5 +280,29 @@ def contar_linhas_com_observacao_notebook():
         return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
 #FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
 
+@app.route('/visualizar_estoque', methods=['GET'])
+def visualizar_estoque():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
+
+@app.route('/visualizar_estoque_desktop', methods=['GET'])
+def visualizar_estoque_desktop():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
+
+@app.route('/visualizar_estoque_notebook', methods=['GET'])
+def visualizar_estoque_notebook():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
+
 if __name__ == '__main__':
     app.run(debug=True)

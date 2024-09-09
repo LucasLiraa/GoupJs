@@ -1127,7 +1127,7 @@ fetch('/get_device_info')
     .catch(error => console.error('Erro ao carregar os dados:', error));
 //FIM FUNÇÕES DASHBOARD NOTEBOOKS
 
-
+//FUNÇÕES COMPLEMENTARES DASHBOARD
 function navigateToLink() {
     var select = document.getElementById('deviceType');
     var selectedValue = select.value;
@@ -1135,3 +1135,261 @@ function navigateToLink() {
       window.location.href = selectedValue;
     }
   }
+
+function visualizarEstoque() {
+    fetch('http://localhost:5000/visualizar_estoque')
+    .then(response => response.json())
+    .then(data => {
+        exibirTabelaEstoque(data);
+    })
+    .catch(error => console.error('Erro:', error));
+}
+function exibirTabelaEstoque(data) {
+    const tabela = document.getElementById('tabelaEstoque');
+    tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
+
+    if (data.length > 0) {
+        const colunasOrdem = ['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'TipoDispositivo']; 
+
+        // Adiciona cabeçalhos com selects para filtros
+        const headerRow = document.createElement('tr');
+        colunasOrdem.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+
+            // Cria o select para o filtro
+            const select = document.createElement('select');
+            const todasOpcoes = [...new Set(data.map(row => row[header]))]; // Obtém opções únicas
+            const optionVazia = document.createElement('option');
+            optionVazia.value = '';
+            optionVazia.textContent = `Filtrar ${header}`;
+            select.appendChild(optionVazia);
+
+            todasOpcoes.forEach(opcao => {
+                const option = document.createElement('option');
+                option.value = opcao;
+                option.textContent = opcao;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', function() {
+                aplicarFiltros(data);
+            });
+
+            th.appendChild(select);
+            headerRow.appendChild(th);
+        });
+        tabela.appendChild(headerRow);
+
+        // Função para aplicar filtros
+        function aplicarFiltros(data) {
+            const filtros = {};
+            headerRow.querySelectorAll('select').forEach((select, index) => {
+                const coluna = colunasOrdem[index];
+                filtros[coluna] = select.value;
+            });
+
+            const dadosFiltrados = data.filter(row => {
+                return colunasOrdem.every(coluna => {
+                    return filtros[coluna] === '' || row[coluna] === filtros[coluna];
+                });
+            });
+            
+            // Limpa e exibe os dados filtrados
+            tabela.innerHTML = "";
+            tabela.appendChild(headerRow); // Adiciona os cabeçalhos novamente
+            exibirDados(dadosFiltrados);
+        }
+
+        // Função para exibir dados
+        function exibirDados(data) {
+            data.forEach(row => {
+                const rowElement = document.createElement('tr');
+                colunasOrdem.forEach(header => {
+                    const cell = document.createElement('td');
+                    cell.textContent = row[header] || ''; // Se o valor for nulo, deixa em branco
+                    rowElement.appendChild(cell);
+                });
+                tabela.appendChild(rowElement);
+            });
+        }
+
+        exibirDados(data); // Exibe os dados iniciais
+    }
+}
+
+function visualizarEstoqueDesktop() {
+    fetch('http://localhost:5000/visualizar_estoque_desktop')
+    .then(response => response.json())
+    .then(data => {
+        exibirTabelaEstoqueComFiltroDesktop(data);
+    })
+    .catch(error => console.error('Erro:', error));
+}
+function exibirTabelaEstoqueComFiltroDesktop(data) {
+    const tabela = document.getElementById('tabelaEstoqueDesktop');
+    tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
+
+    if (data.length > 0) {
+        const colunasOrdem = ['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'TipoDispositivo'];
+
+        // Adiciona cabeçalhos com selects para filtros
+        const headerRow = document.createElement('tr');
+        colunasOrdem.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+
+            // Cria o select para o filtro, exceto para "TipoDispositivo"
+            if (header !== 'TipoDispositivo') {
+                const select = document.createElement('select');
+                const todasOpcoes = [...new Set(data.map(row => row[header]))]; // Obtém opções únicas
+                const optionVazia = document.createElement('option');
+                optionVazia.value = '';
+                optionVazia.textContent = `Filtrar ${header}`;
+                select.appendChild(optionVazia);
+
+                todasOpcoes.forEach(opcao => {
+                    const option = document.createElement('option');
+                    option.value = opcao;
+                    option.textContent = opcao;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    aplicarFiltros(data);
+                });
+
+                th.appendChild(select);
+            }
+
+            headerRow.appendChild(th);
+        });
+        tabela.appendChild(headerRow);
+
+        // Função para aplicar filtros
+        function aplicarFiltros(data) {
+            const filtros = { 'TipoDispositivo': 'Desktop' }; // Filtro automático para "TipoDispositivo"
+            headerRow.querySelectorAll('select').forEach((select, index) => {
+                const coluna = colunasOrdem[index];
+                if (coluna !== 'TipoDispositivo') {
+                    filtros[coluna] = select.value;
+                }
+            });
+
+            const dadosFiltrados = data.filter(row => {
+                return colunasOrdem.every(coluna => {
+                    return (filtros[coluna] === '' || row[coluna] === filtros[coluna]);
+                });
+            });
+            
+            // Limpa e exibe os dados filtrados
+            tabela.innerHTML = "";
+            tabela.appendChild(headerRow); // Adiciona os cabeçalhos novamente
+            exibirDados(dadosFiltrados);
+        }
+
+        // Função para exibir dados
+        function exibirDados(data) {
+            data.forEach(row => {
+                const rowElement = document.createElement('tr');
+                colunasOrdem.forEach(header => {
+                    const cell = document.createElement('td');
+                    cell.textContent = row[header] || ''; // Se o valor for nulo, deixa em branco
+                    rowElement.appendChild(cell);
+                });
+                tabela.appendChild(rowElement);
+            });
+        }
+
+        // Aplica o filtro de "Desktop" automaticamente na primeira exibição
+        aplicarFiltros(data);
+    }
+}
+
+function visualizarEstoqueNotebook() {
+    fetch('http://localhost:5000/visualizar_estoque_notebook')
+    .then(response => response.json())
+    .then(data => {
+        exibirTabelaEstoqueComFiltroNotebook(data);
+    })
+    .catch(error => console.error('Erro:', error));
+}
+function exibirTabelaEstoqueComFiltroNotebook(data) {
+    const tabela = document.getElementById('tabelaEstoqueNotebook');
+    tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
+
+    if (data.length > 0) {
+        const colunasOrdem = ['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'TipoDispositivo'];
+
+        // Adiciona cabeçalhos com selects para filtros
+        const headerRow = document.createElement('tr');
+        colunasOrdem.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+
+            // Cria o select para o filtro, exceto para "TipoDispositivo"
+            if (header !== 'TipoDispositivo') {
+                const select = document.createElement('select');
+                const todasOpcoes = [...new Set(data.map(row => row[header]))]; // Obtém opções únicas
+                const optionVazia = document.createElement('option');
+                optionVazia.value = '';
+                optionVazia.textContent = `Filtrar ${header}`;
+                select.appendChild(optionVazia);
+
+                todasOpcoes.forEach(opcao => {
+                    const option = document.createElement('option');
+                    option.value = opcao;
+                    option.textContent = opcao;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    aplicarFiltros(data);
+                });
+
+                th.appendChild(select);
+            }
+
+            headerRow.appendChild(th);
+        });
+        tabela.appendChild(headerRow);
+
+        // Função para aplicar filtros
+        function aplicarFiltros(data) {
+            const filtros = { 'TipoDispositivo': 'Notebook' }; // Filtro automático para "TipoDispositivo"
+            headerRow.querySelectorAll('select').forEach((select, index) => {
+                const coluna = colunasOrdem[index];
+                if (coluna !== 'TipoDispositivo') {
+                    filtros[coluna] = select.value;
+                }
+            });
+
+            const dadosFiltrados = data.filter(row => {
+                return colunasOrdem.every(coluna => {
+                    return (filtros[coluna] === '' || row[coluna] === filtros[coluna]);
+                });
+            });
+            
+            // Limpa e exibe os dados filtrados
+            tabela.innerHTML = "";
+            tabela.appendChild(headerRow); // Adiciona os cabeçalhos novamente
+            exibirDados(dadosFiltrados);
+        }
+
+        // Função para exibir dados
+        function exibirDados(data) {
+            data.forEach(row => {
+                const rowElement = document.createElement('tr');
+                colunasOrdem.forEach(header => {
+                    const cell = document.createElement('td');
+                    cell.textContent = row[header] || ''; // Se o valor for nulo, deixa em branco
+                    rowElement.appendChild(cell);
+                });
+                tabela.appendChild(rowElement);
+            });
+        }
+
+        // Aplica o filtro de "Desktop" automaticamente na primeira exibição
+        aplicarFiltros(data);
+    }
+}
