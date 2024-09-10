@@ -27,7 +27,7 @@ document.getElementById('serialInput').addEventListener('keypress', function(eve
 });
 function buscarSerial() {
     const serial = document.getElementById('serialInput').value;
-    fetch(`http://localhost:5000/buscar_serial?serial=${serial}`)
+    fetch(`https://goupjsapi.onrender.com/buscar_serial?serial=${serial}`)
     .then(response => response.json())
     .then(data => {
         if (data.message) {
