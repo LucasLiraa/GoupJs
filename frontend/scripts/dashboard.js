@@ -1137,7 +1137,7 @@ function navigateToLink() {
   }
 
 function visualizarEstoque() {
-    fetch('http://localhost:5000/visualizar_estoque')
+    fetch('https://goupjsapi.onrender.com/visualizar_estoque')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoque(data);
@@ -1219,7 +1219,7 @@ function exibirTabelaEstoque(data) {
 }
 
 function visualizarEstoqueDesktop() {
-    fetch('http://localhost:5000/visualizar_estoque_desktop')
+    fetch('https://goupjsapi.onrender.com/visualizar_estoque_desktop')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoqueComFiltroDesktop(data);
@@ -1307,7 +1307,7 @@ function exibirTabelaEstoqueComFiltroDesktop(data) {
 }
 
 function visualizarEstoqueNotebook() {
-    fetch('http://localhost:5000/visualizar_estoque_notebook')
+    fetch('https://goupjsapi.onrender.com/visualizar_estoque_notebook')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoqueComFiltroNotebook(data);
