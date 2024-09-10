@@ -155,6 +155,11 @@ body.dark .sideMenu header .toggle{
     transition: var(--tran-05);
     color: var(--text-color);
 }
+.sideMenuSearch button{
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 .sideMenu li a{
     height: 100%;
     width: 100%;
@@ -314,7 +319,7 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: center;
 
-    border-radius: 0 10px 10px 10px;
+    border-radius: 10px;
     background-color: var(--body-color);
 }
 .dashboardChartsUpDesk{

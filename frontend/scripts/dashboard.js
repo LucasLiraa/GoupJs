@@ -21,6 +21,30 @@ document.addEventListener("DOMContentLoaded", function() {
         updateChartColors();
     });
 
+    //Funcionamento Pesquisa
+document.getElementById('serialInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        buscarSerial();
+    }
+});
+function buscarSerial() {
+    const serial = document.getElementById('serialInput').value;
+    fetch(`http://localhost:5000/buscar_serial?serial=${serial}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);
+        } else {
+            alert(`Serial: ${data.SerialDispositivo}\nNome: ${data.NomeDispositivo}\nModelo: ${data.ModeloDispositivo}
+                \nProcessador: ${data.ProcessadorUsado}\nMemória: ${data.MemoriaTotal}\nArmazenamento: ${data.ArmazenamentoInterno}
+                \nObservação: ${data.ObservacaoDispositivo}`);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
+}
+
     async function contarLinhasDesktops() {
         try {
             const response = await fetch('/contar_linhas_desktops');
@@ -1137,7 +1161,7 @@ function navigateToLink() {
   }
 
 function visualizarEstoque() {
-    fetch('https://goupjsapi.onrender.com/visualizar_estoque')
+    fetch('http://localhost:5000/visualizar_estoque')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoque(data);
@@ -1219,7 +1243,7 @@ function exibirTabelaEstoque(data) {
 }
 
 function visualizarEstoqueDesktop() {
-    fetch('https://goupjsapi.onrender.com/visualizar_estoque_desktop')
+    fetch('http://localhost:5000/visualizar_estoque_desktop')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoqueComFiltroDesktop(data);
@@ -1307,7 +1331,7 @@ function exibirTabelaEstoqueComFiltroDesktop(data) {
 }
 
 function visualizarEstoqueNotebook() {
-    fetch('https://goupjsapi.onrender.com/visualizar_estoque_notebook')
+    fetch('http://localhost:5000/visualizar_estoque_notebook')
     .then(response => response.json())
     .then(data => {
         exibirTabelaEstoqueComFiltroNotebook(data);

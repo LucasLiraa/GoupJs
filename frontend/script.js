@@ -27,7 +27,7 @@ document.getElementById('serialInput').addEventListener('keypress', function(eve
 });
 function buscarSerial() {
     const serial = document.getElementById('serialInput').value;
-    fetch(`https://goupjsapi.onrender.com/buscar_serial?serial=${serial}`)
+    fetch(`http://localhost:5000/buscar_serial?serial=${serial}`)
     .then(response => response.json())
     .then(data => {
         if (data.message) {
@@ -101,34 +101,48 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function adicionarSerial(serial, observacao, tipoDispositivo) {
-        fetch('/adicionar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                serial: serial,
-                observacao: observacao,
-                tipoDispositivo: tipoDispositivo
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.erro) { // Verifica se a resposta contém um erro
-                console.log('Erro ao adicionar:', data);
-                exibirMensagem('Erro: ' + data.erro, 'erro');
-            } else if (data.mensagem) { // Verifica se há uma mensagem de sucesso
-                console.log('Adicionado com sucesso:', data);
-                exibirMensagem(data.mensagem, 'sucesso');
-            } else {
-                exibirMensagem('Resposta inesperada do servidor.', 'erro');
-            }
-        })
-        .catch((error) => {
-            console.error('Erro ao adicionar:', error);
-            exibirMensagem('Erro ao adicionar equipamento.', 'erro');
-        });
+        // Verificar se o serial já existe
+        fetch(`/verificar_serial?serial=${serial}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.existe) {
+                    // Se o serial já estiver no estoque, exibe a mensagem de erro
+                    exibirMensagem('Erro: Este serial já está presente no estoque.', 'erro');
+                } else {
+                    // Se o serial não existir, procede com a adição
+                    fetch('/adicionar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            serial: serial,
+                            observacao: observacao,
+                            tipoDispositivo: tipoDispositivo
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.erro) {
+                            exibirMensagem('Erro: ' + data.erro, 'erro');
+                        } else if (data.mensagem) {
+                            exibirMensagem(data.mensagem, 'sucesso');
+                        } else {
+                            exibirMensagem('Resposta inesperada do servidor.', 'erro');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao adicionar:', error);
+                        exibirMensagem('Erro ao adicionar equipamento.', 'erro');
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao verificar serial:', error);
+                exibirMensagem('Erro ao verificar serial.', 'erro');
+            });
     }
+    
     
     function excluirSerial(serial) {
         const mensagem = `Excluir ${serial}`;

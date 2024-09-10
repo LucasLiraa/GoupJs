@@ -1,8 +1,10 @@
 from flask import Flask, send_from_directory, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import os
 import re
 app = Flask(__name__)
+CORS(app)
 
 # Diretório do frontend
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../frontend'))
@@ -35,6 +37,15 @@ def index():
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
 
+def verificar_serial_no_estoque(serial):
+    try:
+        df_estoque = pd.read_excel(CAMINHO_ESTOQUE)
+        if 'SerialDispositivo' not in df_estoque.columns:
+            raise Exception("Coluna 'SerialDispositivo' não encontrada.")
+        return serial in df_estoque['SerialDispositivo'].values
+    except Exception as e:
+        print(f"Erro ao verificar serial: {e}")
+        return False  # Retorne False caso ocorra um erro
 
 def verificSerial(mensagem):
     padrao = r'\b[A-Z0-9]{6,}\b'
@@ -98,6 +109,16 @@ def excluir_item(serial):
     else:
         return False
 
+@app.route('/verificar_serial')
+def verificar_serial():
+    serial = request.args.get('serial')
+    try:
+        # Verificar se o serial existe no estoque
+        existe = verificar_serial_no_estoque(serial)
+        return jsonify({'existe': existe})
+    except Exception as e:
+        # Captura o erro e retorna um JSON com a mensagem de erro
+        return jsonify({'erro': str(e)}), 500
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar_item():
