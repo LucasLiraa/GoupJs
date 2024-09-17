@@ -77,19 +77,19 @@ def adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, Processador
     try:
         nova_linha = pd.DataFrame({
             'NomeDispositivo': [NomeDispositivo],
-            'ModeloDispositivo': [ModeloDispositivo],
+            'ModeloDispositivo': [ModeloDispositivo if ModeloDispositivo else ''],  # Se vazio, deixe em branco
             'SerialDispositivo': [SerialDispositivo],
-            'ProcessadorUsado': [ProcessadorUsado],
-            'MemoriaTotal': [MemoriaTotal],
-            'ArmazenamentoInterno': [ArmazenamentoInterno],
+            'ProcessadorUsado': [ProcessadorUsado if ProcessadorUsado else ''],  # Se vazio, deixe em branco
+            'MemoriaTotal': [MemoriaTotal if MemoriaTotal else ''],  # Se vazio, deixe em branco
+            'ArmazenamentoInterno': [ArmazenamentoInterno if ArmazenamentoInterno else ''],  # Se vazio, deixe em branco
             'ObservacaoDispositivo': [ObservacaoDispositivo],
-            'TipoDispositivo': [TipoDispositivo]
+            'TipoDispositivo': [TipoDispositivo]  # Nenhuma palavra-chave é adicionada aqui
         })
         
         df = pd.read_excel(CAMINHO_ESTOQUE)
         df = pd.concat([df, nova_linha], ignore_index=True)
         df.to_excel(CAMINHO_ESTOQUE, index=False)
-        return "Equipamento adicionado no estoque."
+        return "Equipamento adicionado ao estoque."
     except Exception as e:
         return f"Erro ao adicionar nova linha à planilha de estoque: {e}"
     
@@ -124,18 +124,37 @@ def verificar_serial():
 def adicionar_item():
     data = request.json
     serial = data.get('serial')
-    nova_observacao = data.get('observacao')  # Nova observação vinda do front-end
-    tipo_dispositivo = data.get('tipoDispositivo')  # Tipo do dispositivo vindo do front-end
-    
-    encontrado, NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo = consultDados(serial)
-    
-    if encontrado:
-        # Substitui a observação obtida pela nova observação fornecida
-        ObservacaoDispositivo = nova_observacao if nova_observacao else ObservacaoDispositivo
-        resultado = adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
+    nova_observacao = data.get('observacao')
+    tipo_dispositivo = data.get('tipoDispositivo')
+
+    # Verifica se há palavras-chave para adicionar manualmente
+    palavras_chave = ["Monitor", "Teclado", "Mouse", "Adaptador", "DisplayPort"]
+    adicionar_manual = any(palavra in tipo_dispositivo for palavra in palavras_chave)
+
+    if adicionar_manual:
+        # Adicionar manualmente sem consultar a planilha
+        NomeDispositivo = tipo_dispositivo
+        ModeloDispositivo = "Manual"
+        ProcessadorUsado = "N/A"
+        MemoriaTotal = "N/A"
+        ArmazenamentoInterno = "N/A"
+        ObservacaoDispositivo = nova_observacao if nova_observacao else "Adicionado manualmente"
+        
+        # Adiciona diretamente ao estoque
+        resultado = adicDados(NomeDispositivo, ModeloDispositivo, serial, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
         return jsonify({'mensagem': resultado})
     else:
-        return jsonify({'erro': 'Serial não encontrado na planilha de consulta.'})
+        # Se não houver palavras-chave, faz a consulta padrão
+        encontrado, NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo = consultDados(serial)
+        
+        if encontrado:
+            # Substitui a observação obtida pela nova observação fornecida
+            ObservacaoDispositivo = nova_observacao if nova_observacao else ObservacaoDispositivo
+            resultado = adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
+            return jsonify({'mensagem': resultado})
+        else:
+            return jsonify({'erro': 'Serial não encontrado na planilha de consulta.'})
+
 
 @app.route('/consulta', methods=['POST'])
 def consulta():

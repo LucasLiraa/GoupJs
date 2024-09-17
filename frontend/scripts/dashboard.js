@@ -764,8 +764,6 @@ fetch('/get_device_info')
 //FIM FUNÇÕES DASHBOARD DESKTOPS
 
 
-
-
 //COMEÇO FUNÇÕES DASHBOARD NOTEBOOKS
 function contarLinhasNotebooks() {
     fetch('/contar_linhas_notebooks')
@@ -1173,7 +1171,7 @@ function exibirTabelaEstoque(data) {
     tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
 
     if (data.length > 0) {
-        const colunasOrdem = ['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'TipoDispositivo']; 
+        const colunasOrdem = ['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo', 'ObservacaoDispositivo', 'TipoDispositivo']; 
 
         // Adiciona cabeçalhos com selects para filtros
         const headerRow = document.createElement('tr');
