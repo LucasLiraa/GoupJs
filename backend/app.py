@@ -1,59 +1,40 @@
 from flask import Flask, send_from_directory, request, jsonify
-from flask_cors import CORS
 import pandas as pd
 import os
 import re
 app = Flask(__name__)
-CORS(app)
 
 # Diretório do frontend
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../frontend'))
 
 # Caminhos para os arquivos de estoque
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 25-07-24.xlsx')
+CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 24-09-24.xlsx')
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
-
-
-@app.route('/buscar_serial', methods=['GET'])
-def buscar_serial():
-    serial = request.args.get('serial')
-    df = pd.read_excel(CAMINHO_ESTOQUE)
-    dispositivo = df[df['SerialDispositivo'] == serial][['SerialDispositivo', 'NomeDispositivo', 'ModeloDispositivo',
-                                                         'ProcessadorUsado','MemoriaTotal','ArmazenamentoInterno',
-                                                         'ObservacaoDispositivo','TipoDispositivo']]
-    if not dispositivo.empty:
-        info = dispositivo.to_dict(orient='records')[0]
-        return jsonify(info)
-    else:
-        return jsonify({'message': 'Serial não encontrado'})
 
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/')
 def index():
     return send_from_directory(FRONTEND_DIR, 'index.html')
-
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
 
-def verificar_serial_no_estoque(serial):
-    try:
-        df_estoque = pd.read_excel(CAMINHO_ESTOQUE)
-        if 'SerialDispositivo' not in df_estoque.columns:
-            raise Exception("Coluna 'SerialDispositivo' não encontrada.")
-        return serial in df_estoque['SerialDispositivo'].values
-    except Exception as e:
-        print(f"Erro ao verificar serial: {e}")
-        return False  # Retorne False caso ocorra um erro
-
-def verificSerial(mensagem):
-    padrao = r'\b[A-Z0-9]{6,}\b'
-    match = re.search(padrao, mensagem)
-    if match:
-        return match.group()
+def verificarDispositivoOuPeriferico(mensagem):
+    # Verificar se é um serial (Desktop ou Notebook)
+    padrao_serial = r'\b[A-Z0-9]{6,}\b'
+    match_serial = re.search(padrao_serial, mensagem)
+    
+    # Verificar se é um periférico (Monitor, Teclado, Mouse)
+    padrao_periferico = r'\b(monitor|teclado|mouse)\b'
+    match_periferico = re.search(padrao_periferico, mensagem, re.IGNORECASE)
+    
+    if match_serial:
+        return 'dispositivo', match_serial.group()
+    elif match_periferico:
+        return 'periferico', match_periferico.group()
     else:
-        return None
+        return None, None
 
 def consultDados(Serial):
     try:
@@ -76,23 +57,43 @@ def consultDados(Serial):
 def adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, TipoDispositivo): 
     try:
         nova_linha = pd.DataFrame({
-            'NomeDispositivo': [NomeDispositivo],
-            'ModeloDispositivo': [ModeloDispositivo if ModeloDispositivo else ''],  # Se vazio, deixe em branco
+            'NomeDispositivo': [NomeDispositivo if NomeDispositivo else 'Não possui'],
+            'ModeloDispositivo': [ModeloDispositivo if ModeloDispositivo else 'Não possui'],
             'SerialDispositivo': [SerialDispositivo],
-            'ProcessadorUsado': [ProcessadorUsado if ProcessadorUsado else ''],  # Se vazio, deixe em branco
-            'MemoriaTotal': [MemoriaTotal if MemoriaTotal else ''],  # Se vazio, deixe em branco
-            'ArmazenamentoInterno': [ArmazenamentoInterno if ArmazenamentoInterno else ''],  # Se vazio, deixe em branco
-            'ObservacaoDispositivo': [ObservacaoDispositivo],
-            'TipoDispositivo': [TipoDispositivo]  # Nenhuma palavra-chave é adicionada aqui
+            'ProcessadorUsado': [ProcessadorUsado if ProcessadorUsado else 'Não possui'],
+            'MemoriaTotal': [MemoriaTotal if MemoriaTotal else 'Não possui'],
+            'ArmazenamentoInterno': [ArmazenamentoInterno if ArmazenamentoInterno else 'Não possui'],
+            'ObservacaoDispositivo': [ObservacaoDispositivo if ObservacaoDispositivo else 'Não possui'],
+            'TipoDispositivo': [TipoDispositivo if TipoDispositivo else 'Não possui']
         })
         
         df = pd.read_excel(CAMINHO_ESTOQUE)
         df = pd.concat([df, nova_linha], ignore_index=True)
         df.to_excel(CAMINHO_ESTOQUE, index=False)
-        return "Equipamento adicionado ao estoque."
+        return "Dispositivo adicionado ao estoque."
     except Exception as e:
-        return f"Erro ao adicionar nova linha à planilha de estoque: {e}"
-    
+        return f"Erro ao adicionar dispositivo à planilha de estoque: {e}"
+
+def adicDadosPeriferico(ModeloDispositivo, SerialDispositivo, TipoDispositivo, ObservacaoDispositivo): 
+    try:
+        nova_linha = pd.DataFrame({
+            'NomeDispositivo': ['Não possui'],  # Não usado para periféricos
+            'ProcessadorUsado': ['Não possui'],  # Não usado para periféricos
+            'MemoriaTotal': ['Não possui'],  # Não usado para periféricos
+            'ArmazenamentoInterno': ['Não possui'],  # Não usado para periféricos
+            'ModeloDispositivo': [ModeloDispositivo],
+            'SerialDispositivo': [SerialDispositivo],
+            'TipoDispositivo': [TipoDispositivo],
+            'ObservacaoDispositivo': [ObservacaoDispositivo if ObservacaoDispositivo else 'Não possui']
+        })
+        
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        df = pd.concat([df, nova_linha], ignore_index=True)
+        df.to_excel(CAMINHO_ESTOQUE, index=False)
+        return "Periférico adicionado ao estoque."
+    except Exception as e:
+        return f"Erro ao adicionar periférico à planilha de estoque: {e}"
+
 def excluir_item(serial):
     # Use o caminho definido para carregar a planilha
     df = pd.read_excel(CAMINHO_ESTOQUE)
@@ -109,57 +110,44 @@ def excluir_item(serial):
     else:
         return False
 
-@app.route('/verificar_serial')
-def verificar_serial():
-    serial = request.args.get('serial')
-    try:
-        # Verificar se o serial existe no estoque
-        existe = verificar_serial_no_estoque(serial)
-        return jsonify({'existe': existe})
-    except Exception as e:
-        # Captura o erro e retorna um JSON com a mensagem de erro
-        return jsonify({'erro': str(e)}), 500
-
 @app.route('/adicionar', methods=['POST'])
 def adicionar_item():
-    data = request.json
-    serial = data.get('serial')
-    nova_observacao = data.get('observacao')
-    tipo_dispositivo = data.get('tipoDispositivo')
+    try:
+        data = request.json
+        serial = data.get('serial')  # Para dispositivos e periféricos
+        nova_observacao = data.get('observacao')  # Nova observação vinda do front-end
+        tipo_dispositivo = data.get('tipoDispositivo')  # Tipo do dispositivo vindo do front-end
+        modelo = data.get('modelo')  # Somente para periféricos
 
-    # Verifica se há palavras-chave para adicionar manualmente
-    palavras_chave = ["Monitor", "Teclado", "Mouse", "Adaptador", "DisplayPort"]
-    adicionar_manual = any(palavra in tipo_dispositivo for palavra in palavras_chave)
+        # Verificar se o serial já está no estoque
+        df_estoque = pd.read_excel(CAMINHO_ESTOQUE)
+        if serial in df_estoque['SerialDispositivo'].values:
+            return jsonify({'erro': 'Serial já está no estoque, não pode ser adicionado novamente.'})
 
-    if adicionar_manual:
-        # Adicionar manualmente sem consultar a planilha
-        NomeDispositivo = tipo_dispositivo
-        ModeloDispositivo = "Manual"
-        ProcessadorUsado = "N/A"
-        MemoriaTotal = "N/A"
-        ArmazenamentoInterno = "N/A"
-        ObservacaoDispositivo = nova_observacao if nova_observacao else "Adicionado manualmente"
-        
-        # Adiciona diretamente ao estoque
-        resultado = adicDados(NomeDispositivo, ModeloDispositivo, serial, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
-        return jsonify({'mensagem': resultado})
-    else:
-        # Se não houver palavras-chave, faz a consulta padrão
-        encontrado, NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo = consultDados(serial)
-        
-        if encontrado:
-            # Substitui a observação obtida pela nova observação fornecida
-            ObservacaoDispositivo = nova_observacao if nova_observacao else ObservacaoDispositivo
-            resultado = adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
+        # Verificar se é periférico ou dispositivo
+        if modelo:
+            # Trata como periférico
+            resultado = adicDadosPeriferico(modelo, serial, tipo_dispositivo, nova_observacao)
             return jsonify({'mensagem': resultado})
-        else:
-            return jsonify({'erro': 'Serial não encontrado na planilha de consulta.'})
 
+        else:
+            # Trata como dispositivo (notebook ou desktop)
+            encontrado, NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo = consultDados(serial)
+            
+            if encontrado:
+                # Substitui a observação obtida pela nova observação fornecida, se houver
+                ObservacaoDispositivo = nova_observacao if nova_observacao else ObservacaoDispositivo
+                resultado = adicDados(NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo, tipo_dispositivo)
+                return jsonify({'mensagem': resultado})
+            else:
+                return jsonify({'erro': 'Serial não encontrado na planilha de consulta.'})
+    except Exception as e:
+        return jsonify({'erro': f'Ocorreu um erro: {str(e)}'}), 500
 
 @app.route('/consulta', methods=['POST'])
 def consulta():
     data = request.json
-    serial = verificSerial(data.get('mensagem'))
+    serial = verificarDispositivoOuPeriferico(data.get('mensagem'))
     if serial:
         encontrado, NomeDispositivo, ModeloDispositivo, SerialDispositivo, ProcessadorUsado, MemoriaTotal, ArmazenamentoInterno, ObservacaoDispositivo = consultDados(serial)
         if encontrado:
@@ -184,7 +172,7 @@ def excluir():
     if not mensagem:
         return jsonify({'status': 'error', 'message': 'Mensagem não encontrada'}), 400
 
-    serial = verificSerial(mensagem)
+    serial = verificarDispositivoOuPeriferico(mensagem)
     
     if not serial:
         return jsonify({'status': 'error', 'message': 'Serial não encontrado na mensagem'}), 400
@@ -196,7 +184,6 @@ def excluir():
         return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404 
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
     
-
 #COMEÇO DASHBOARD FILTOS DE TODOS
 @app.route('/get_device_info', methods=['GET'])
 def get_device_info():
@@ -237,8 +224,7 @@ def contar_linhas_com_observacao():
         return jsonify({'linhas_com_observacao': linhas_com_observacao})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação: {e}'}), 500
-#FINAL DASHBOARD FILTROS DE TODOS
-
+#FINAL DASHBOARD FILTROS DOS DESKTOPS
 
 #COMEÇO DASHBOARD FILTROS DOS DESKTOPS
 @app.route('/contar_linhas_desktops', methods=['GET'])
@@ -278,71 +264,6 @@ def contar_linhas_com_observacao_desktop():
         return jsonify({'linhas_com_observacao_desktop': linhas_com_observacao_desktop})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação e Desktop: {e}'}), 500
-#FINAL DASHBOARD FILTROS DOS DESKTOPS    
-
-#COMEÇO DASHBOARD FILTROS DOS NOTEBOOKS
-@app.route('/contar_linhas_notebooks', methods=['GET'])
-def contar_linhas_notebooks():
-    try:
-        # Carregar o DataFrame da planilha Excel
-        df = pd.read_excel(CAMINHO_ESTOQUE)
-        
-        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook'
-        df_desktops = df[df['TipoDispositivo'] == 'Notebook']
-        
-        # Contar as linhas filtradas
-        linhas_notebooks = df_desktops.shape[0]
-        
-        # Retornar o resultado como JSON
-        return jsonify({'linhas_notebooks': linhas_notebooks})
-    except Exception as e:
-        return jsonify({'error': f'Erro ao contar as linhas de notebooks: {e}'}), 500
-
-@app.route('/contar_linhas_com_observacao_notebook', methods=['GET'])
-def contar_linhas_com_observacao_notebook():
-    try:
-        # Carregar o DataFrame da planilha Excel
-        df = pd.read_excel(CAMINHO_ESTOQUE)
-        
-        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook', 'Observacao' não está vazia e não é 'Não possui'
-        df_filtrado = df[
-            (df['TipoDispositivo'] == 'Notebook') &
-            (df['ObservacaoDispositivo'].notna()) &
-            (df['ObservacaoDispositivo'] != 'Não possui')
-        ]
-        
-        # Contar as linhas filtradas
-        linhas_com_observacao_notebook = df_filtrado.shape[0]
-        
-        # Retornar o resultado como JSON
-        return jsonify({'linhas_com_observacao_notebook': linhas_com_observacao_notebook})
-    except Exception as e:
-        return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
-#FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
-
-@app.route('/visualizar_estoque', methods=['GET'])
-def visualizar_estoque():
-    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
-    df = df.fillna('')  # Substitui valores NaN por string vazia
-    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
-    return jsonify(data)  # Retorna os dados como JSON
-
-@app.route('/visualizar_estoque_desktop', methods=['GET'])
-def visualizar_estoque_desktop():
-    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
-    df = df.fillna('')  # Substitui valores NaN por string vazia
-    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
-    return jsonify(data)  # Retorna os dados como JSON
-
-@app.route('/visualizar_estoque_notebook', methods=['GET'])
-def visualizar_estoque_notebook():
-    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
-    df = df.fillna('')  # Substitui valores NaN por string vazia
-    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
-    return jsonify(data)  # Retorna os dados como JSON
 
 if __name__ == '__main__':
     app.run(debug=True)
