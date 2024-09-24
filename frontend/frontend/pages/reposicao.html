@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+    <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <title>Reposição | Estoque</title>
+            
+            <link rel="shortcut icon" href="../imgs/logo.ico">
+            <link rel="stylesheet" href="../styles/reposicao.css">
+            <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+        </head>
+    <body>
+
+        <nav class="sideMenu close">
+            <header>
+                <div class="sideMenuImage">
+                    <span class="sideImage">
+                        <img src="../imgs/logo.png" alt="">
+                    </span>
+
+                    <div class="sideMenuText sideMenuHeaderText">
+                        <span class="sideMenuName">Controle Estoque</span>
+                        <span class="sideMenuProfession">Lucas Lira</span>
+                    </div>
+                </div>
+
+                <i class='bx bx-chevron-right toggle'></i>
+            </header>
+
+            <div class="sideMenuOptions">
+                <div class="sideMenuSelections">
+                    <li class="sideMenuSearch">
+                            <i class='bx bx-search icon'></i>
+                            <input type="text" placeholder="Procurar..."> 
+                    </li>
+                    <ul class="sideMenuLinks">
+                        <li class="sideMenuNav">
+                            <a href="../index.html">
+                                <i class='bx bx-edit icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Controle</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="./dashboard.html">
+                                <i class='bx bx bxs-dashboard icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Dashboard</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="#">
+                                <i class='bx bxs-dollar-circle icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Reposição</span> 
+                            </a>
+                        </li>
+                        <li class="sideMenuNav">
+                            <a href="./descartes.html">
+                                <i class='bx bxs-trash-alt icon'></i>
+                                <span class="sideMenuText sideMenuNavText">Descartes</span> 
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sideMenuBottom">
+                    <li class="sideMenuNav">
+                        <a href="#">
+                            <i class='bx bx-log-out icon' ></i>
+                            <span class="sideMenuText sideMenuNavText">Logout</span> 
+                        </a>
+                    </li>
+
+                    <li class="sideMenuMode">
+                        <div class="moon-sun">
+                            <i class='bx bx-moon icon moon'></i>
+                            <i class='bx bx-sun icon sun'></i>
+                        </div>
+                        <span class="sideMenuModeText sideMenuText">Dark Mode</span>
+
+                        <div class="sideMenuToggle">
+                            <span class="sideMenuSwitch"></span>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </nav>
+
+        <section class="sectionRepos">
+            <div class="reposicao">
+                <h1>Equipamentos para Reposição</h1>
+
+                <div class="reposControl">
+                    <div class="reposControlSearch">
+                        <i class='bx bx-search icon'></i>
+                        <input type="text" placeholder="Procurar..."> 
+                    </div>
+                    <div class="reposControlButton">
+                        <button>Administrar Cotações</button>
+                    </div>
+                </div>
+
+                <div class="reposItens">
+                    <div class="reposItensBox">
+                        <div class="reposItensBoxIcon">
+                            <i class='bx bx-desktop icon'></i>
+                        </div>
+                        <div class="reposItensBoxContent">
+                            <p>Máquinas</p>
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="reposItensBox">
+                        <div class="reposItensBoxIcon">
+                            <i class='bx bxs-mouse-alt icon'></i>
+                        </div>
+                        <div class="reposItensBoxContent">
+                            <p>Periféricos</p>
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="reposItensBox">
+                        <div class="reposItensBoxIcon">
+                            <i class='bx bxs-plug icon'></i>
+                        </div>
+                        <div class="reposItensBoxContent">
+                            <p>Cabos</p>
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="reposItensBox">
+                        <div class="reposItensBoxIcon">
+                            <i class='bx bxs-memory-card icon'></i>
+                        </div>
+                        <div class="reposItensBoxContent">
+                            <p>Peças</p>
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="reposItensBox">
+                        <div class="reposItensBoxIcon">
+                            <i class='bx bxs-component icon'></i>
+                        </div>
+                        <div class="reposItensBoxContent">
+                            <p>Outros</p>
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reposTable">
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Equipamentos</th>
+                            <th>Tipo do Equipamento</th>
+                            <th>Quantidade para Compra</th>
+                            <th>Link</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Alcool Isopropilico</td>
+                            <td>Outros</td>
+                            <td>2</td>
+                            <td><a target="_blank" href="https://www.mercadolivre.com.br/1000ml-alcool-isopropilico-alto-grau-de-limpeza-eletronica/p/MLB37557152#polycard_client=search-nordic&wid=MLB3734394889&sid=search&searchVariation=MLB37557152&position=4&search_layout=grid&type=product&tracking_id=7021bd93-f386-40b3-ad2f-e44d9c5b0258">https://www.mercadolivre.com.br/1000ml...</a></td>
+                          </tr>
+                        </tbody>
+                      </table>                      
+                </div>
+            </div>
+        </section>
+
+        <section class="sectionReposForms" style="display: none;">
+            <div class="formReposContainer">
+                <span class="closeFormButton" style="cursor: pointer;">&times;</span> <!-- Botão de fechar -->
+                <h2>Adicione Itens na planilha</h2>
+
+                <form id="formCotacao">
+                    <div class="stockControlForms">
+                        <input type="text" id="item" name="item" required>
+                        <label>Nome do Item</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <input type="quantidade" id="quantidade" name="quantidade" required>
+                        <label>Quantidade do Item</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <select id="tipo" required>
+                            <option value="" disabled selected hidden></option>
+                            <option value="maquina">Máquina</option>
+                            <option value="periferico">Periférico</option>
+                            <option value="cabo">Cabo</option>
+                            <option value="peca">Peça</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                        <label>Tipo do Equipamento</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <input type="url" id="link" name="link" required>
+                        <label>Link do Item</label>
+                    </div>
+                    <button type="submit">Adicionar</button>
+                </form>
+            </div>
+        </section>
+          
+
+        <script src="../scripts/reposicao.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </body>
+</html>
