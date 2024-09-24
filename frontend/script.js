@@ -202,13 +202,3 @@ function exibirMensagem(mensagem, tipo) {
         mensagemElemento.className = ''; // Remove a classe para limpar o estilo
     }, 5000);
 }
-
-function limparFormulario() {
-    document.getElementById('serial').value = '';
-    document.getElementById('modelo').value = '';
-    document.getElementById('idSerial').value = '';
-    document.getElementById('observacao').value = '';
-    document.getElementById('tipoDispositivo').value = '';
-    serialInput.value = '';  // Limpa o campo de serial também
-    submitButton.style.display = 'none';  // Oculta o botão após a adição
-}

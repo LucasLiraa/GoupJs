@@ -274,7 +274,7 @@ body.dark .sideMenuSwitch::before{
     justify-content: flex-start;
     flex-direction: column;
 
-    width: 90%;
+    width: 100%;
     height: 100%;
 
     margin: 20px;
@@ -297,13 +297,12 @@ body.dark .sideMenuSwitch::before{
     width: 100%;
     padding: 10px;
 }
-
 .reposControlSearch{
     display: flex;
     align-items: center;
     justify-content: flex-start;
 
-    width: 400px;
+    width: 30%;
     height: 40px;
 
     border-radius: 8px;
@@ -317,7 +316,7 @@ body.dark .sideMenuSwitch::before{
     outline: none;
     border: none;
     font-size: 16px;
-    padding-left: 30px;
+    padding-left: 20px;
     border-radius: 8px;
     transition: var(--tran-05);
     color: var(--text-color);
@@ -333,7 +332,10 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     padding: 10px;
 }
-
+.reposControlButton{
+    width: 100% - 70%;
+    margin-left: 20px;
+}
 .reposControlButton button{
     width: 250px;
     height: 40px;
@@ -373,10 +375,9 @@ body.dark .sideMenuSwitch::before{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .reposItensBox .icon{
+    width: 30%;
+    padding: 10px;
     font-size: 45px;
-
-    margin: 20px;
-
     color: var(--text-color);
 }
 .reposItensBoxContent{
@@ -384,8 +385,7 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-between;
 
-    width: 100%;
-
+    width: 70%;
     color: var(--text-color);
 }
 
@@ -395,7 +395,6 @@ body.dark .sideMenuSwitch::before{
     justify-content: center;
 
     width: 100%;
-    height: 40vh;
 
     padding: 10px;
 }

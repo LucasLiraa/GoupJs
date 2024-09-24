@@ -96,7 +96,7 @@
                         <input type="text" placeholder="Procurar..."> 
                     </div>
                     <div class="reposControlButton">
-                        <button>Administrar Cotações</button>
+                        <button class="algumBotaoParaAbrir">Administrar Cotações</button>
                     </div>
                 </div>
 
@@ -147,32 +147,68 @@
                         </div>
                     </div>
                 </div>
-
+            
                 <div class="reposTable">
                     <table>
                         <thead>
-                          <tr>
-                            <th>Equipamentos</th>
-                            <th>Tipo do Equipamento</th>
-                            <th>Quantidade para Compra</th>
-                            <th>Link</th>
-                          </tr>
+                            <tr>
+                                <th>Equipamentos</th>
+                                <th>Quantidade para Compra</th>
+                                <th>Link</th>
+                                <th>Data</th>
+                                <th>Tipo do Equipamento</th>
+                            </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>Alcool Isopropilico</td>
-                            <td>Outros</td>
-                            <td>2</td>
-                            <td><a target="_blank" href="https://www.mercadolivre.com.br/1000ml-alcool-isopropilico-alto-grau-de-limpeza-eletronica/p/MLB37557152#polycard_client=search-nordic&wid=MLB3734394889&sid=search&searchVariation=MLB37557152&position=4&search_layout=grid&type=product&tracking_id=7021bd93-f386-40b3-ad2f-e44d9c5b0258">https://www.mercadolivre.com.br/1000ml...</a></td>
-                          </tr>
+                            <tr>
+                                <td>⠀⠀⠀</td>
+                                <td>⠀⠀⠀</td>
+                                <td>⠀⠀⠀</td>
+                                <td>⠀⠀⠀</td>
+                                <td>⠀⠀⠀</td>
+                            </tr>
                         </tbody>
                       </table>                      
                 </div>
+
             </div>
         </section>
 
+        <section class="sectionReposForms" style="display: none;">
+            <div class="formReposContainer">
+                <span class="closeFormButton" style="cursor: pointer;">&times;</span> <!-- Botão de fechar -->
+                <h2>Adicione Itens na planilha</h2>
 
-        <script src="../scripts/dashboard.js"></script>
+                <form id="formCotacao">
+                    <div class="stockControlForms">
+                        <input type="text" id="item" name="item" required>
+                        <label>Nome do Item</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <input type="quantidade" id="quantidade" name="quantidade" required>
+                        <label>Quantidade do Item</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <select id="tipo" required>
+                            <option value="" disabled selected hidden></option>
+                            <option value="maquina">Máquina</option>
+                            <option value="periferico">Periférico</option>
+                            <option value="cabo">Cabo</option>
+                            <option value="peca">Peça</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                        <label>Tipo do Equipamento</label>
+                    </div>
+                    <div class="stockControlForms">
+                        <input type="url" id="link" name="link" required>
+                        <label>Link do Item</label>
+                    </div>
+                    <button type="submit">Adicionar</button>
+                </form>
+            </div>
+        </section>
+
+        <script src="../scripts/reposicao.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>
