@@ -183,7 +183,8 @@ def excluir():
     else:
         return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404 
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
-    
+
+
 #COMEÇO DASHBOARD FILTOS DE TODOS
 @app.route('/get_device_info', methods=['GET'])
 def get_device_info():
@@ -224,7 +225,8 @@ def contar_linhas_com_observacao():
         return jsonify({'linhas_com_observacao': linhas_com_observacao})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação: {e}'}), 500
-#FINAL DASHBOARD FILTROS DOS DESKTOPS
+#FINAL DASHBOARD FILTROS DE TODOS
+
 
 #COMEÇO DASHBOARD FILTROS DOS DESKTOPS
 @app.route('/contar_linhas_desktops', methods=['GET'])
@@ -264,6 +266,71 @@ def contar_linhas_com_observacao_desktop():
         return jsonify({'linhas_com_observacao_desktop': linhas_com_observacao_desktop})
     except Exception as e:
         return jsonify({'error': f'Erro ao contar as linhas com observação e Desktop: {e}'}), 500
+#FINAL DASHBOARD FILTROS DOS DESKTOPS    
+
+#COMEÇO DASHBOARD FILTROS DOS NOTEBOOKS
+@app.route('/contar_linhas_notebooks', methods=['GET'])
+def contar_linhas_notebooks():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook'
+        df_desktops = df[df['TipoDispositivo'] == 'Notebook']
+        
+        # Contar as linhas filtradas
+        linhas_notebooks = df_desktops.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_notebooks': linhas_notebooks})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas de notebooks: {e}'}), 500
+
+@app.route('/contar_linhas_com_observacao_notebook', methods=['GET'])
+def contar_linhas_com_observacao_notebook():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Notebook', 'Observacao' não está vazia e não é 'Não possui'
+        df_filtrado = df[
+            (df['TipoDispositivo'] == 'Notebook') &
+            (df['ObservacaoDispositivo'].notna()) &
+            (df['ObservacaoDispositivo'] != 'Não possui')
+        ]
+        
+        # Contar as linhas filtradas
+        linhas_com_observacao_notebook = df_filtrado.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_com_observacao_notebook': linhas_com_observacao_notebook})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
+#FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
+
+@app.route('/visualizar_estoque', methods=['GET'])
+def visualizar_estoque():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
+
+@app.route('/visualizar_estoque_desktop', methods=['GET'])
+def visualizar_estoque_desktop():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
+
+@app.route('/visualizar_estoque_notebook', methods=['GET'])
+def visualizar_estoque_notebook():
+    df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
+    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
+    df = df.fillna('')  # Substitui valores NaN por string vazia
+    data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
+    return jsonify(data)  # Retorna os dados como JSON
 
 if __name__ == '__main__':
     app.run(debug=True)
