@@ -172,7 +172,7 @@ def excluir():
     if not mensagem:
         return jsonify({'status': 'error', 'message': 'Mensagem não encontrada'}), 400
 
-    serial = verificarDispositivoOuPeriferico(mensagem)
+    _, serial = verificarDispositivoOuPeriferico(mensagem)  # Pegando apenas o serial
     
     if not serial:
         return jsonify({'status': 'error', 'message': 'Serial não encontrado na mensagem'}), 400
@@ -181,10 +181,10 @@ def excluir():
     if excluir_item(serial):
         return jsonify({'status': 'success', 'message': f'Equipamento com serial {serial} excluído com sucesso'})
     else:
-        return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404 
+        return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
+
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
-
-
+    
 #COMEÇO DASHBOARD FILTOS DE TODOS
 @app.route('/get_device_info', methods=['GET'])
 def get_device_info():
@@ -308,6 +308,7 @@ def contar_linhas_com_observacao_notebook():
         return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
 #FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
 
+#COMEÇO VISUALIZAÇÃO EM PLANILHA
 @app.route('/visualizar_estoque', methods=['GET'])
 def visualizar_estoque():
     df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
@@ -331,6 +332,7 @@ def visualizar_estoque_notebook():
     df = df.fillna('')  # Substitui valores NaN por string vazia
     data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
     return jsonify(data)  # Retorna os dados como JSON
+#FINAL VISUALIZAÇÃO EM PLANILHA
 
 if __name__ == '__main__':
     app.run(debug=True)

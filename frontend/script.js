@@ -154,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 exibirMensagem('Erro: ' + data.erro, 'erro');
             } else if (data.mensagem) {
                 exibirMensagem(data.mensagem, 'sucesso');
-                limparFormulario();  // Limpa o formulário após o sucesso
             } else {
                 exibirMensagem('Resposta inesperada do servidor.', 'erro');
             }

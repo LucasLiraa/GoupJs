@@ -1156,7 +1156,7 @@ function navigateToLink() {
     if (selectedValue) {
       window.location.href = selectedValue;
     }
-  }
+}
 
 function visualizarEstoque() {
     fetch('https://goupjsapi.onrender.com/visualizar_estoque')
@@ -1166,6 +1166,7 @@ function visualizarEstoque() {
     })
     .catch(error => console.error('Erro:', error));
 }
+
 function exibirTabelaEstoque(data) {
     const tabela = document.getElementById('tabelaEstoque');
     tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
@@ -1248,6 +1249,7 @@ function visualizarEstoqueDesktop() {
     })
     .catch(error => console.error('Erro:', error));
 }
+
 function exibirTabelaEstoqueComFiltroDesktop(data) {
     const tabela = document.getElementById('tabelaEstoqueDesktop');
     tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados
@@ -1336,6 +1338,7 @@ function visualizarEstoqueNotebook() {
     })
     .catch(error => console.error('Erro:', error));
 }
+
 function exibirTabelaEstoqueComFiltroNotebook(data) {
     const tabela = document.getElementById('tabelaEstoqueNotebook');
     tabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados

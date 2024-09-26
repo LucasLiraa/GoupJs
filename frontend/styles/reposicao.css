@@ -274,7 +274,7 @@ body.dark .sideMenuSwitch::before{
     justify-content: flex-start;
     flex-direction: column;
 
-    width: 100%;
+    width: 90%;
     height: 100%;
 
     margin: 20px;
@@ -297,12 +297,13 @@ body.dark .sideMenuSwitch::before{
     width: 100%;
     padding: 10px;
 }
+
 .reposControlSearch{
     display: flex;
     align-items: center;
     justify-content: flex-start;
 
-    width: 30%;
+    width: 400px;
     height: 40px;
 
     border-radius: 8px;
@@ -316,7 +317,7 @@ body.dark .sideMenuSwitch::before{
     outline: none;
     border: none;
     font-size: 16px;
-    padding-left: 20px;
+    padding-left: 30px;
     border-radius: 8px;
     transition: var(--tran-05);
     color: var(--text-color);
@@ -332,10 +333,7 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     padding: 10px;
 }
-.reposControlButton{
-    width: 100% - 70%;
-    margin-left: 20px;
-}
+
 .reposControlButton button{
     width: 250px;
     height: 40px;
@@ -375,9 +373,10 @@ body.dark .sideMenuSwitch::before{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .reposItensBox .icon{
-    width: 30%;
-    padding: 10px;
     font-size: 45px;
+
+    margin: 20px;
+
     color: var(--text-color);
 }
 .reposItensBoxContent{
@@ -385,7 +384,8 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-between;
 
-    width: 70%;
+    width: 100%;
+
     color: var(--text-color);
 }
 
@@ -395,6 +395,7 @@ body.dark .sideMenuSwitch::before{
     justify-content: center;
 
     width: 100%;
+    height: 100%;
 
     padding: 10px;
 }
@@ -415,3 +416,125 @@ body.dark .sideMenuSwitch::before{
 .reposTable td a{
     color: var(--text-color);
 }
+
+
+.sectionReposForms{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    top: 0;
+    left: 250px;
+    height: 100%;
+    width: calc(100% - 250px);
+    z-index: 10;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: var(--tran-05);
+}
+.sideMenu.close~.sectionReposForms{
+    left: 88px;
+    width: calc(100% - 88px);
+}
+
+.formReposContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    width: 40%;
+    height: 60%;
+
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--text-color);
+    background-color: var(--sidebar-color);
+}
+.formReposContainer h2{
+    margin: 40px;
+}
+#formCotacao{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+}
+#formCotacao button{
+    align-items: start;
+    width: 200px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
+    transition: var(--tran-05);
+}
+#formCotacao button:hover{
+    cursor: pointer;
+    color: var(--primary-color-color);
+    background-color: var(--body-color);
+}
+.stockControlForms{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+}
+.stockControlForms label{
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    padding: 0 5px;
+    pointer-events: none;
+    transition: var(--tran-04);
+}
+.stockControlForms input{
+    font-size: 16px;
+    padding: 10px;
+    background: transparent;
+    color: var(--text-color);
+    border: 1.2px solid var(--text-color);
+    outline: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.stockControlForms input:focus~label,
+.stockControlForms input:valid~label{
+    top: -12px;
+    font-size: 12px;
+    background: var(--sidebar-color);
+}
+.stockControlForms input,
+.stockControlForms select {
+    font-size: 16px;
+    padding: 10px;
+    background: transparent;
+    color: var(--text-color);
+    border: 1.2px solid var(--text-color);
+    outline: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.stockControlForms select:focus~label,
+.stockControlForms select:valid~label{
+    top: -12px;
+    font-size: 12px;
+    background: var(--sidebar-color);
+}
+
+.closeFormButton {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 90%;
+    margin-bottom: -40px;
+    font-size: 36px;
+    color: var(--text-color)
+  }
