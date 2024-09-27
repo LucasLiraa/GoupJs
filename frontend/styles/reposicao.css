@@ -335,7 +335,7 @@ body.dark .sideMenuSwitch::before{
 }
 
 .reposControlButton button{
-    width: 250px;
+    width: 300px;
     height: 40px;
 
     border-radius: 8px;
@@ -417,6 +417,13 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
 }
 
+.reposTable td button{
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
 
 .sectionReposForms{
     display: flex;
@@ -445,7 +452,7 @@ body.dark .sideMenuSwitch::before{
     flex-direction: column;
 
     width: 40%;
-    height: 60%;
+    height: 75%;
 
     padding: 20px;
     border-radius: 10px;
@@ -538,3 +545,21 @@ body.dark .sideMenuSwitch::before{
     font-size: 36px;
     color: var(--text-color)
   }
+
+.sucesso {
+    color: green;
+    border: 1px solid green;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
+
+}
+.erro {
+    color: red;
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
+}

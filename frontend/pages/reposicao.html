@@ -88,15 +88,14 @@
 
         <section class="sectionRepos">
             <div class="reposicao">
-                <h1>Equipamentos para Reposição</h1>
+                <h1>Controle de Reposição</h1>
 
                 <div class="reposControl">
-                    <div class="reposControlSearch">
-                        <i class='bx bx-search icon'></i>
-                        <input type="text" placeholder="Procurar..."> 
-                    </div>
                     <div class="reposControlButton">
                         <button class="algumBotaoParaAbrir">Administrar Cotações</button>
+                    </div>
+                    <div class="reposControlButton">
+                        <button id="exportarPlanilha">Exportar Planilha de Cotações</button>
                     </div>
                 </div>
 
@@ -160,15 +159,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>⠀⠀⠀</td>
-                                <td>⠀⠀⠀</td>
-                                <td>⠀⠀⠀</td>
-                                <td>⠀⠀⠀</td>
-                                <td>⠀⠀⠀</td>
-                            </tr>
+                            <!-- Linhas da tabela serão preenchidas dinamicamente -->
                         </tbody>
-                      </table>                      
+                    </table>
                 </div>
 
             </div>
@@ -180,30 +173,42 @@
                 <h2>Adicione Itens na planilha</h2>
 
                 <form id="formCotacao">
+
                     <div class="stockControlForms">
-                        <input type="text" id="item" name="item" required>
+                        <input type="text" id="equipamento" name="equipamento" required>
                         <label>Nome do Item</label>
                     </div>
+
                     <div class="stockControlForms">
-                        <input type="quantidade" id="quantidade" name="quantidade" required>
+                        <input type="number" id="quantidade" name="quantidade" required>
                         <label>Quantidade do Item</label>
                     </div>
+
                     <div class="stockControlForms">
-                        <select id="tipo" required>
+                        <select id="tipo" name="tipo" required>
                             <option value="" disabled selected hidden></option>
-                            <option value="maquina">Máquina</option>
-                            <option value="periferico">Periférico</option>
-                            <option value="cabo">Cabo</option>
-                            <option value="peca">Peça</option>
+                            <option value="maquina">Máquinas</option>
+                            <option value="periferico">Periféricos</option>
+                            <option value="cabo">Cabos</option>
+                            <option value="peca">Peças</option>
                             <option value="outros">Outros</option>
                         </select>
                         <label>Tipo do Equipamento</label>
                     </div>
+
+                    <div class="stockControlForms">
+                        <input type="date" id="data" name="data" required>
+                        <label for="data"></label>
+                    </div>
+
                     <div class="stockControlForms">
                         <input type="url" id="link" name="link" required>
                         <label>Link do Item</label>
                     </div>
+
                     <button type="submit">Adicionar</button>
+
+                    <div id="mensagem"></div>
                 </form>
             </div>
         </section>

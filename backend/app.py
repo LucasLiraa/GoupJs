@@ -1,4 +1,5 @@
 from flask import Flask, send_from_directory, request, jsonify
+from flask import send_file
 import pandas as pd
 import os
 import re
@@ -11,6 +12,7 @@ FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../front
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 24-09-24.xlsx')
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
+CAMINHO_COTACAO = os.path.join(BASE_DIR, 'data', 'Cotacao.xlsx')
 
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/')
@@ -109,6 +111,29 @@ def excluir_item(serial):
         return True
     else:
         return False
+
+
+
+# Função para adicionar dados à planilha de cotacao
+def adicionar_a_cotacao(equipamento, quantidade, link, data, tipo):
+    try:
+        # Carrega a planilha existente
+        df = pd.read_excel(CAMINHO_COTACAO)
+        
+        # Cria uma nova linha com os dados recebidos como um DataFrame
+        nova_linha = pd.DataFrame({'Equipamento': [equipamento], 'Quantidade': [quantidade], 'Link': [link], 'Data': [data], 'Tipo': [tipo]})
+        
+        # Concatena a nova linha ao DataFrame existente
+        df = pd.concat([df, nova_linha], ignore_index=True)
+        
+        # Salva as alterações de volta no arquivo Excel
+        df.to_excel(CAMINHO_COTACAO, index=False)
+        return True, "Dados salvos com sucesso!"  # Retorna uma mensagem de sucesso
+    except Exception as e:
+        return False, str(e)  # Retorna a mensagem de erro
+
+    
+
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar_item():
@@ -312,7 +337,6 @@ def contar_linhas_com_observacao_notebook():
 @app.route('/visualizar_estoque', methods=['GET'])
 def visualizar_estoque():
     df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
     df = df.fillna('')  # Substitui valores NaN por string vazia
     data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
     return jsonify(data)  # Retorna os dados como JSON
@@ -320,7 +344,6 @@ def visualizar_estoque():
 @app.route('/visualizar_estoque_desktop', methods=['GET'])
 def visualizar_estoque_desktop():
     df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
     df = df.fillna('')  # Substitui valores NaN por string vazia
     data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
     return jsonify(data)  # Retorna os dados como JSON
@@ -328,11 +351,97 @@ def visualizar_estoque_desktop():
 @app.route('/visualizar_estoque_notebook', methods=['GET'])
 def visualizar_estoque_notebook():
     df = pd.read_excel(CAMINHO_ESTOQUE)  # Carrega o arquivo Excel
-    df = df.drop(columns=['EquipamentoKit', 'IdentificaçãoKit', 'ImagensDash'])  # Remove a coluna indesejada
     df = df.fillna('')  # Substitui valores NaN por string vazia
     data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
     return jsonify(data)  # Retorna os dados como JSON
 #FINAL VISUALIZAÇÃO EM PLANILHA
+
+#CONTROLE REPOSIÇÃO
+@app.route('/submit', methods=['POST'])
+def submit():
+    try:
+        data = request.json
+        item = data.get('equipamento')
+        quantidade = data.get('quantidade')
+        link = data.get('link')
+        data_item = data.get('data')  # Renomeie para 'data_item' para evitar conflito com o módulo 'data'
+        tipo = data.get('tipo')
+        
+        # Chama a função para adicionar o item à cotação
+        sucesso, mensagem = adicionar_a_cotacao(item, quantidade, link, data_item, tipo)
+        
+        if sucesso:
+            return jsonify({"message": "Dados enviados com sucesso!"}), 200
+        else:
+            return jsonify({"message": f"Erro ao salvar dados: {mensagem}"}), 500
+    except Exception as e:
+        return jsonify({"message": f"Ocorreu um erro: {str(e)}"}), 500
+    
+@app.route('/contar_tipos', methods=['GET'])
+def contar_tipos():
+    try:
+        # Carrega a planilha
+        df = pd.read_excel(CAMINHO_COTACAO)
+
+        # Conta quantos de cada tipo de equipamento existem
+        contagem = df['Tipo'].value_counts().to_dict()
+
+        # Retorna a contagem de cada tipo
+        return jsonify({
+            'maquinas': contagem.get('maquina', 0),
+            'perifericos': contagem.get('periferico', 0),
+            'cabos': contagem.get('cabo', 0),
+            'pecas': contagem.get('peca', 0),
+            'outros': contagem.get('outros', 0)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/obter_cotacoes', methods=['GET'])
+def obter_cotacoes():
+    try:
+        # Carrega a planilha com as cotações
+        df = pd.read_excel(CAMINHO_COTACAO)
+
+        # Converte o DataFrame para uma lista de dicionários
+        cotacoes = df.to_dict(orient='records')
+
+        # Retorna os dados em formato JSON
+        return jsonify(cotacoes), 200
+    except Exception as e:
+        return jsonify({"message": f"Erro ao obter cotações: {str(e)}"}), 500
+
+@app.route('/excluir_cotacao', methods=['POST'])
+def excluir_cotacao():
+    try:
+        dados = request.get_json()
+        equipamento = dados.get('equipamento')
+
+        # Carrega a planilha
+        df = pd.read_excel(CAMINHO_COTACAO)
+
+        # Filtra as linhas que não correspondem ao equipamento a ser excluído
+        df_filtrado = df[df['Equipamento'] != equipamento]
+
+        # Salva as alterações de volta na planilha
+        df_filtrado.to_excel(CAMINHO_COTACAO, index=False)
+
+        return jsonify({"message": "Item excluído com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Erro ao excluir o item: {str(e)}"}), 500
+
+@app.route('/exportar_planilha', methods=['GET'])
+def exportar_planilha():
+    try:
+        # Verificar se o arquivo existe
+        if os.path.exists(CAMINHO_COTACAO):
+            # Enviar o arquivo para download
+            return send_file(CAMINHO_COTACAO, as_attachment=True)
+        else:
+            return jsonify({'message': 'Planilha não encontrada.'}), 404
+    except Exception as e:
+        return jsonify({'message': f'Erro ao exportar planilha: {e}'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
