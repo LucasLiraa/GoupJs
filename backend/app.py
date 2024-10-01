@@ -23,18 +23,27 @@ def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
 
 def verificarDispositivoOuPeriferico(mensagem):
+    # Verificar se a mensagem contém o comando de exclusão com tipo de dispositivo
+    padrao_excluir_tipo = r'\bExcluir\s+(teclado|mouse|displayport|adaptador)\b'
+    match_excluir_tipo = re.search(padrao_excluir_tipo, mensagem, re.IGNORECASE)
+
     # Verificar se é um serial (Desktop ou Notebook)
     padrao_serial = r'\b[A-Z0-9]{6,}\b'
     match_serial = re.search(padrao_serial, mensagem)
     
     # Verificar se é um periférico (Monitor, Teclado, Mouse)
-    padrao_periferico = r'\b(monitor|teclado|mouse)\b'
+    padrao_periferico = r'\b(|teclado|mouse|displayport|adaptador)\b'
     match_periferico = re.search(padrao_periferico, mensagem, re.IGNORECASE)
     
-    if match_serial:
+    if match_excluir_tipo:
+        # Retorna o tipo de dispositivo para exclusão (ex: "Mouse", "Teclado")
+        return 'tipo', match_excluir_tipo.group(1).capitalize()  # Retorna o tipo de dispositivo com a primeira letra maiúscula
+    elif match_serial:
+        # Retorna o serial para exclusão
         return 'dispositivo', match_serial.group()
     elif match_periferico:
-        return 'periferico', match_periferico.group()
+        # Retorna o periférico se for identificado fora do contexto de exclusão
+        return 'periferico', match_periferico.group().capitalize()
     else:
         return None, None
 
@@ -112,7 +121,32 @@ def excluir_item(serial):
     else:
         return False
 
+def excluir_por_tipo(tipo):
+    df = pd.read_excel(CAMINHO_ESTOQUE)
 
+    # Encontrar o primeiro dispositivo do tipo correspondente
+    linha_para_excluir = df[df['TipoDispositivo'].str.contains(tipo, case=False, na=False)].index
+
+    if not linha_para_excluir.empty:
+        # Excluir a primeira linha encontrada
+        df.drop(linha_para_excluir[0], inplace=True)
+
+        # Salvar a planilha atualizada
+        df.to_excel(CAMINHO_ESTOQUE, index=False)
+
+        return True, f'Um {tipo} excluído com sucesso'
+    else:
+        return False, f'Tipo {tipo} não encontrado no estoque'
+
+def contar_itens_por_tipo(tipo):
+    print(f"Contando itens do tipo: {tipo}")  # Log para verificar qual tipo está sendo contado
+    df = pd.read_excel(CAMINHO_ESTOQUE)
+
+    # Verifica a quantidade de itens do mesmo tipo
+    itens_do_tipo = df[df['TipoDispositivo'].str.contains(tipo, case=False, na=False)]
+    quantidade = len(itens_do_tipo)
+    print(f"Quantidade de itens do tipo {tipo}: {quantidade}")  # Log da quantidade encontrada
+    return quantidade
 
 # Função para adicionar dados à planilha de cotacao
 def adicionar_a_cotacao(equipamento, quantidade, link, data, tipo):
@@ -132,9 +166,7 @@ def adicionar_a_cotacao(equipamento, quantidade, link, data, tipo):
     except Exception as e:
         return False, str(e)  # Retorna a mensagem de erro
 
-    
-
-
+#COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/adicionar', methods=['POST'])
 def adicionar_item():
     try:
@@ -197,19 +229,35 @@ def excluir():
     if not mensagem:
         return jsonify({'status': 'error', 'message': 'Mensagem não encontrada'}), 400
 
-    _, serial = verificarDispositivoOuPeriferico(mensagem)  # Pegando apenas o serial
-    
-    if not serial:
-        return jsonify({'status': 'error', 'message': 'Serial não encontrado na mensagem'}), 400
-    
-    # Chama a função de exclusão e verifica o resultado
-    if excluir_item(serial):
-        return jsonify({'status': 'success', 'message': f'Equipamento com serial {serial} excluído com sucesso'})
-    else:
-        return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
+    tipo_ou_serial, valor = verificarDispositivoOuPeriferico(mensagem)
+    if not valor:
+        return jsonify({'status': 'error', 'message': 'Nenhum serial ou tipo de dispositivo encontrado na mensagem'}), 400
+
+    if tipo_ou_serial == 'dispositivo':
+        # Exclusão por serial
+        if excluir_item(valor):
+            quantidade_restante = contar_itens_por_tipo(valor)  # Função para contar os itens restantes do mesmo tipo
+            
+            if quantidade_restante < 6:
+                return jsonify({'status': 'success', 'message': f'Equipamento com serial {valor} excluído com sucesso', 'aviso': f'Existem apenas {quantidade_restante} itens restantes. Deseja adicionar à cotação?'})
+            return jsonify({'status': 'success', 'message': f'Equipamento com serial {valor} excluído com sucesso'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
+    elif tipo_ou_serial == 'tipo':
+        # Exclusão por tipo de dispositivo
+        sucesso, mensagem = excluir_por_tipo(valor)
+        if sucesso:
+            quantidade_restante = contar_itens_por_tipo(valor)
+
+            if quantidade_restante < 6:
+                return jsonify({'status': 'success', 'message': mensagem, 'aviso': f'Existem apenas {quantidade_restante} {valor}s restantes. Deseja adicionar à cotação?'})
+            return jsonify({'status': 'success', 'message': mensagem})
+        else:
+            return jsonify({'status': 'error', 'message': mensagem}), 404
 
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
-    
+
+
 #COMEÇO DASHBOARD FILTOS DE TODOS
 @app.route('/get_device_info', methods=['GET'])
 def get_device_info():
@@ -441,7 +489,6 @@ def exportar_planilha():
             return jsonify({'message': 'Planilha não encontrada.'}), 404
     except Exception as e:
         return jsonify({'message': f'Erro ao exportar planilha: {e}'}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True)

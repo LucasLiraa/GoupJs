@@ -1,3 +1,34 @@
+window.onload = function() {
+    var usuarioLogado = localStorage.getItem('usuarioLogado');
+    var horaLogin = localStorage.getItem('horaLogin');
+    var tempoMaximo = 7 * 24 * 60 * 60 * 1000; // 7 dias em milissegundos
+
+    if (usuarioLogado !== 'true' || !horaLogin) {
+        // Se não estiver logado ou não houver hora de login, redireciona para a página de login
+        window.location.href = "./home/index.html";
+    } else {
+        var agora = Date.now();
+
+        // Verifica se o tempo desde o login ultrapassou o tempo máximo permitido
+        if (agora - horaLogin > tempoMaximo) {
+            alert('Sessão expirada, faça login novamente.');
+
+            // Remove o estado de login e redireciona para a página de login
+            localStorage.removeItem('usuarioLogado');
+            localStorage.removeItem('horaLogin');
+            window.location.href = "./home/index.html";
+        }
+    }
+};
+function logout() {
+    // Remove o estado de login e a hora do login do localStorage
+    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('horaLogin');
+
+    // Redireciona para a página de login
+    window.location.href = "./home/index.html";  // ajuste o caminho conforme necessário
+}
+
 const body = document.querySelector("body"),
       sidebar = body.querySelector(".sideMenu"),
       toggle = body.querySelector(".toggle"),
@@ -36,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     submitButton.style.display = 'none';
 
     function isPeriferico(inputValue) {
-        const perifericos = ['monitor', 'teclado', 'mouse'];
+        const perifericos = ['monitor', 'teclado', 'mouse', 'adaptador', 'displayport'];
         return perifericos.some(periferico => inputValue.toLowerCase().includes(periferico));
     }
 
@@ -48,18 +79,18 @@ document.addEventListener('DOMContentLoaded', function () {
             submitButton.textContent = 'Excluir';
         } else if (isPeriferico(inputValue)) {
             // Mostrar campos específicos para periféricos
-            document.getElementById('modeloDiv').style.display = 'flex';  // Exibir campo de modelo
-            document.getElementById('idSerialDiv').style.display = 'flex'; // Exibir campo de ID/Serial
+            document.getElementById('modeloDiv').style.display = 'flex';
+            document.getElementById('idSerialDiv').style.display = 'flex';
+            tipoDispositivoDiv.style.display = 'flex';  // Exibir o tipo de dispositivo (periférico)
             observacaoDiv.style.display = 'flex';
-            tipoDispositivoDiv.style.display = 'none'; // Esconder tipo de dispositivo
             submitButton.style.display = 'block';
             submitButton.textContent = 'Adicionar Periférico';
         } else if (inputValue !== '') {
             // Para desktops e notebooks
             observacaoDiv.style.display = 'flex';
-            tipoDispositivoDiv.style.display = 'flex'; // Exibir tipo de dispositivo para notebooks e desktops
-            document.getElementById('modeloDiv').style.display = 'none';  // Esconder campo de modelo
-            document.getElementById('idSerialDiv').style.display = 'none'; // Esconder campo de ID/Serial
+            tipoDispositivoDiv.style.display = 'flex';  // Exibir tipo de dispositivo
+            document.getElementById('modeloDiv').style.display = 'none';
+            document.getElementById('idSerialDiv').style.display = 'none';
             submitButton.style.display = 'block';
             submitButton.textContent = 'Adicionar';
         } else {
@@ -69,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('idSerialDiv').style.display = 'none'; 
             submitButton.style.display = 'none';
         }
-    }    
+    }
 
     serialInput.addEventListener('input', function () {
         updateFields(serialInput.value.trim());
@@ -85,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     submitButton.addEventListener('click', function (event) {
         event.preventDefault();
         const inputValue = serialInput.value.trim();
-    
+
         if (submitButton.textContent === 'Excluir') {
             const serial = inputValue.split(' ')[1];
             excluirSerial(serial);
@@ -93,15 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
             // Adicionar periférico
             const modelo = document.getElementById('modelo').value.trim();
             const idSerial = document.getElementById('idSerial').value.trim();
+            const tipoDispositivo = document.getElementById('tipoDispositivo').value; // Obter o tipo do select
             const observacao = document.getElementById('observacao').value.trim();
             
-            adicionarPeriferico(modelo, idSerial, inputValue, observacao);
+            adicionarPeriferico(modelo, idSerial, tipoDispositivo, observacao);
         } else {
             // Adicionar dispositivo (desktop/notebook)
             const serial = serialInput.value.trim();
             const observacao = document.getElementById('observacao').value.trim();
             const tipoDispositivo = document.getElementById('tipoDispositivo').value;
-    
+
             adicionarSerial(serial, observacao, tipoDispositivo);
         }
     });
@@ -120,9 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.erro) { // Verifica se a resposta contém um erro
+            if (data.erro) {
                 exibirMensagem('Erro: ' + data.erro, 'erro');
-            } else if (data.mensagem) { // Verifica se há uma mensagem de sucesso
+            } else if (data.mensagem) {
                 console.log('Adicionado com sucesso:', data);
                 exibirMensagem(data.mensagem, 'sucesso');
             } else {
@@ -163,10 +195,10 @@ document.addEventListener('DOMContentLoaded', function () {
             exibirMensagem('Erro ao adicionar periférico.', 'erro');
         });
     }
-    
-    
+
     function excluirSerial(serial) {
         const mensagem = `Excluir ${serial}`;
+        console.log(`Enviando requisição de exclusão para serial: ${serial}`);  // Log para verificar qual serial está sendo enviado
         fetch('/excluir', {
             method: 'POST',
             headers: {
@@ -176,8 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Resposta do backend:', data);  // Log para verificar a resposta do backend
             if (data.status === 'success') {
                 exibirMensagem(data.message, 'sucesso');
+                if (data.aviso) {
+                    console.log('Aviso recebido:', data.aviso);  // Log para verificar se o aviso está sendo recebido
+                    exibirAvisoCotacao(data.aviso, serial);  // Exibe o aviso se houver menos de 5 itens
+                }
             } else {
                 exibirMensagem('Erro: ' + data.message, 'erro');
             }
@@ -185,6 +222,59 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch((error) => {
             console.error('Erro ao excluir:', error);
             exibirMensagem('Erro ao excluir equipamento.', 'erro');
+        });
+    }    
+
+    function exibirAvisoCotacao(mensagem, equipamento) {
+        const avisoElemento = document.getElementById('avisoCotacao');
+        const avisoMensagem = document.getElementById('avisoMensagem');
+        const adicionarBtn = document.getElementById('adicionarCotacaoBtn');
+        const cancelarBtn = document.getElementById('cancelarCotacaoBtn');
+    
+        // Define a mensagem e exibe a section
+        avisoMensagem.textContent = mensagem;
+        avisoElemento.style.display = 'block';
+    
+        // Botão de adicionar à cotação
+        adicionarBtn.onclick = function() {
+            adicionarCotacao(equipamento);
+            avisoElemento.style.display = 'none';  // Oculta a section após a ação
+        };
+    
+        // Botão de cancelar
+        cancelarBtn.onclick = function() {
+            avisoElemento.style.display = 'none';  // Oculta a section
+        };
+    }
+    
+    
+    function adicionarCotacao(equipamento, quantidade = 1) {
+        const data = {
+            equipamento: equipamento,
+            quantidade: quantidade,
+            link: '',  // Pode ser deixado em branco ou preenchido mais tarde
+            data: new Date().toISOString().split('T')[0],  // Data atual no formato 'YYYY-MM-DD'
+            tipo: 'Cotação Automática'  // Define um tipo padrão para a cotação
+        };
+
+        fetch('/submit', {  // Usando a rota existente para adicionar à cotação
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            exibirMensagem(data.message, 'sucesso');
+
+            // Recarregar a tabela de cotações e atualizar a contagem de tipos
+            carregarCotacoes();
+            atualizarContagemTipos();
+        })
+        .catch(error => {
+            console.error('Erro ao adicionar cotação:', error);
+            exibirMensagem('Erro ao adicionar cotação.', 'erro');
         });
     }
 });

@@ -4,10 +4,10 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <title>Descarts | Estoque</title>
+            <title>Descartes | Estoque</title>
             
             <link rel="shortcut icon" href="../imgs/logo.ico">
-            <link rel="stylesheet" href="../styles/dashboard.css">
+            <link rel="stylesheet" href="../styles/descartes.css">
             <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
         </head>
@@ -65,9 +65,9 @@
 
                 <div class="sideMenuBottom">
                     <li class="sideMenuNav">
-                        <a href="#">
-                            <i class='bx bx-log-out icon' ></i>
-                            <span class="sideMenuText sideMenuNavText">Logout</span> 
+                        <a href="../home/index.html">
+                            <i class='bx bx-log-out icon'onclick="logout()"></i>
+                            <span class="sideMenuText sideMenuNavText"onclick="logout()">Logout</span> 
                         </a>
                     </li>
 
@@ -86,14 +86,40 @@
             </div>
         </nav>
 
-        <section class="development">
-            <div class="developmentTitle">
-                <i class='bx bxs-ghost icona'></i>
-                <h1>Página em desenvolvimento...</h1>
-            </div>
+        <section class="sectionDiscard">
+    
+            
+            <table class="discard-table">
+                <thead>
+                    <tr>
+                        <th>Nome do Item</th>
+                        <th>Tipo</th>
+                        <th>Serial</th>
+                        <th>Data</th>
+                        <th>Motivo</th>
+                        <th>Contato</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Teclado</td>
+                        <td>Periférico</td>
+                        <td>ABC12345</td>
+                        <td>25/09/2024</td>
+                        <td>Defeito</td>
+                        <td>(11) 12345-6789</td>
+                        <td>
+                            <button class="approve">Aprovar</button>
+                            <button class="remove">Remover</button>
+                        </td>
+                    </tr>
+                    <!-- Repetir para cada item -->
+                </tbody>
+            </table>
         </section>
 
-        <script src="../scripts/dashboard.js"></script>
+        <script src="../scripts/descartes.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>

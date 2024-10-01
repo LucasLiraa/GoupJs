@@ -387,3 +387,75 @@ body.dark .sideMenuSwitch::before{
     margin-top: 10px;
     background-color: var(--primary-color-light)
 }
+
+.sectionAlertForms{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    top: 0;
+    left: 250px;
+    height: 100%;
+    width: calc(100% - 250px);
+    z-index: 10;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: var(--tran-05);
+}
+.sideMenu.close~.sectionAlertForms{
+    left: 88px;
+    width: calc(100% - 88px);
+}
+.formAlertContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza no eixo X e Y */
+
+    padding: 20px;
+    width: 40%;
+    border-radius: 10px;
+    background-color: var(--sidebar-color);
+}
+.formAlertContainer h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: var(--text-color);
+}
+.formAlertContainer button a{
+    text-decoration: none;
+    color: var(--toggle-color);
+}
+.formAlertContainer button a:hover{
+    color: var(--primary-color);
+}
+.formAlertContainer button{
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--toggle-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.formAlertContainer button#cancelarCotacaoBtn{
+    background-color: var(--text-color);
+}
+.formAlertContainer button:hover{
+    cursor: pointer;
+    color: var(--primary-color);
+    background-color: var(--toggle-color);
+    transition: var(--tran-05);
+}
+.formAlertContainer button#cancelarCotacaoBtn:hover{
+    cursor: pointer;
+    color: var(--primary-color);
+    background-color: var(--toggle-color);
+    transition: var(--tran-05);
+}
