@@ -61,7 +61,6 @@ body.dark{
     white-space: nowrap;
     opacity: 1;
 }
-
 .sideMenu.close .sideMenuText{
     opacity: 0;
 }
@@ -71,7 +70,6 @@ body.dark{
     align-items: center;
     justify-content: center;
 }
-
 .sideMenu li{
     height: 50px;
     margin-top: 10px;
@@ -186,7 +184,6 @@ body.dark .sideMenu li a:hover .sideMenuText{
     flex-direction: column;
     justify-content: space-between;
 }
-
 .sideMenuOptions .sideMenuMode{
     position: relative;
     border-radius: 6px;
@@ -256,7 +253,6 @@ body.dark .sideMenuSwitch::before{
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
 
     position: relative;
     left: 250px;
@@ -269,11 +265,45 @@ body.dark .sideMenuSwitch::before{
     width: calc(100% - 88px);
 }
 
+.containerDiscard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    width: 96%;
+
+    padding: 26px;
+    margin: 26px;
+    border-radius: 10px;
+    color: var(--text-color);
+    background-color: var(--sidebar-color);
+}
+.discardControl{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+
+    width: 100%;
+    padding: 20px;
+}
+.discardControl button{
+    width: 300px;
+    height: 50px;
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
+}
+.discardControl button:hover{
+    color: var(--primary-color);
+    background-color: var(--toggle-color);
+    transition: var(--tran-05);
+}
+
 
 .discard-table {
-    width: 96%;
+    width: 98%;
     border-collapse: collapse;
-    margin: 20px 0;
     font-size: 1.2em;
     text-align: left;
     background-color: var(--sidebar-color);
@@ -320,4 +350,141 @@ button.approve {
 button.remove {
     background-color: #dc3545;
     color: white;
+}
+
+
+.sectionDiscardForms{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    top: 0;
+    left: 250px;
+    height: 100%;
+    width: calc(100% - 250px);
+    z-index: 10;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: var(--tran-05);
+}
+.sideMenu.close~.sectionDiscardForms{
+    left: 88px;
+    width: calc(100% - 88px);
+}
+
+.formDiscardContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    width: 40%;
+
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--text-color);
+    background-color: var(--sidebar-color);
+}
+.formDiscardContainer h2{
+    margin: 40px;
+}
+#formDiscard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+}
+#formDiscard button{
+    align-items: start;
+    width: 200px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
+    transition: var(--tran-05);
+}
+#formDiscard button:hover{
+    cursor: pointer;
+    color: var(--primary-color-color);
+    background-color: var(--body-color);
+}
+.stockControlForms{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+}
+.stockControlForms label{
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    padding: 0 5px;
+    pointer-events: none;
+    transition: var(--tran-04);
+}
+.stockControlForms input{
+    font-size: 16px;
+    padding: 10px;
+    background: transparent;
+    color: var(--text-color);
+    border: 1.2px solid var(--text-color);
+    outline: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.stockControlForms input:focus~label,
+.stockControlForms input:valid~label{
+    top: -12px;
+    font-size: 12px;
+    background: var(--sidebar-color);
+}
+.stockControlForms input,
+.stockControlForms select {
+    font-size: 16px;
+    padding: 10px;
+    background: transparent;
+    color: var(--text-color);
+    border: 1.2px solid var(--text-color);
+    outline: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.stockControlForms select:focus~label,
+.stockControlForms select:valid~label{
+    top: -12px;
+    font-size: 12px;
+    background: var(--sidebar-color);
+}
+.closeFormButton {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 90%;
+    margin-bottom: -40px;
+    font-size: 36px;
+    color: var(--text-color)
+}
+.sucesso {
+    color: green;
+    border: 1px solid green;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
+
+}
+.erro {
+    color: red;
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-color-light)
 }

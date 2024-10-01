@@ -246,37 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
             avisoElemento.style.display = 'none';  // Oculta a section
         };
     }
-    
-    
-    function adicionarCotacao(equipamento, quantidade = 1) {
-        const data = {
-            equipamento: equipamento,
-            quantidade: quantidade,
-            link: '',  // Pode ser deixado em branco ou preenchido mais tarde
-            data: new Date().toISOString().split('T')[0],  // Data atual no formato 'YYYY-MM-DD'
-            tipo: 'Cotação Automática'  // Define um tipo padrão para a cotação
-        };
-
-        fetch('/submit', {  // Usando a rota existente para adicionar à cotação
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            exibirMensagem(data.message, 'sucesso');
-
-            // Recarregar a tabela de cotações e atualizar a contagem de tipos
-            carregarCotacoes();
-            atualizarContagemTipos();
-        })
-        .catch(error => {
-            console.error('Erro ao adicionar cotação:', error);
-            exibirMensagem('Erro ao adicionar cotação.', 'erro');
-        });
-    }
 });
 
 // Função para exibir mensagens na tela
@@ -291,3 +260,7 @@ function exibirMensagem(mensagem, tipo) {
         mensagemElemento.className = ''; // Remove a classe para limpar o estilo
     }, 5000);
 }
+
+document.querySelector('.closeFormButton').addEventListener('click', function() {
+    document.querySelector('.sectionAlertForms').style.display = 'none';
+  });

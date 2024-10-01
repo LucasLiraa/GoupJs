@@ -87,37 +87,88 @@
         </nav>
 
         <section class="sectionDiscard">
-    
-            
-            <table class="discard-table">
-                <thead>
-                    <tr>
-                        <th>Nome do Item</th>
-                        <th>Tipo</th>
-                        <th>Serial</th>
-                        <th>Data</th>
-                        <th>Motivo</th>
-                        <th>Contato</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Teclado</td>
-                        <td>Periférico</td>
-                        <td>ABC12345</td>
-                        <td>25/09/2024</td>
-                        <td>Defeito</td>
-                        <td>(11) 12345-6789</td>
-                        <td>
-                            <button class="approve">Aprovar</button>
-                            <button class="remove">Remover</button>
-                        </td>
-                    </tr>
-                    <!-- Repetir para cada item -->
-                </tbody>
-            </table>
+            <div class="containerDiscard">
+                <h1>Controle de Descartes</h1>
+
+                <div class="discardControl">
+                    <div class="discardControlButton">
+                        <button class="algumBotaoParaAbrir">Administrar Descartes</button>
+                    </div>
+                    <div class="discardControlButton">
+                        <button id="exportarPlanilhaDiscard">Exportar Planilha de Descartes</button>
+                    </div>
+                </div>
+
+                <table class="discard-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Item</th>
+                            <th>Serial</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Motivo</th>
+                            <th>Contato</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas da tabela serão preenchidas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
         </section>
+
+        <section class="sectionDiscardForms" style="display: none;">
+            <div class="formDiscardContainer">
+                <span class="closeFormButton" style="cursor: pointer;">&times;</span> <!-- Botão de fechar -->
+                <h2>Adicione Itens na Planilha de Descarte</h2>
+        
+                <form id="formDescarte">
+        
+                    <div class="stockControlForms">
+                        <input type="text" id="equipamento" name="equipamento" required>
+                        <label>Nome do Equipamento</label>
+                    </div>
+        
+                    <div class="stockControlForms">
+                        <input type="text" id="serial" name="serial" required>
+                        <label>Serial</label>
+                    </div>
+        
+                    <div class="stockControlForms">
+                        <select id="tipo" name="tipo" required>
+                            <option value="" disabled selected></option>
+                            <option value="maquina">Máquina</option>
+                            <option value="periferico">Periférico</option>
+                            <option value="cabo">Cabo</option>
+                            <option value="peca">Peça</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                        <label>Tipo do Equipamento</label>
+                    </div>
+        
+                    <div class="stockControlForms">
+                        <input type="date" id="data" name="data" required>
+                        <label for="data"></label>
+                    </div>
+        
+                    <div class="stockControlForms">
+                        <input type="text" id="motivo" name="motivo" required>
+                        <label>Motivo do Descarte</label>
+                    </div>
+        
+                    <div class="stockControlForms">
+                        <input type="text" id="contato" name="contato" required>
+                        <label>Contato Responsável</label>
+                    </div>
+        
+                    <button type="submit">Adicionar</button>
+        
+                    <div id="mensagem"></div>
+                </form>
+            </div>
+        </section>
+        
 
         <script src="../scripts/descartes.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -430,11 +430,18 @@ tbody td a{
     color: var(--text-color);
 }
 tbody td button{
+    width: 100%;
+    height: 100%;
     border: none;
     background: none;
     cursor: pointer;
     font-size: 1.2rem;
     color: var(--text-color);
+}
+tbody td button:hover{
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
+    transition: var(--tran-05);
 }
 
 

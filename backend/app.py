@@ -13,6 +13,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_CONSULTA = os.path.join(BASE_DIR, 'data', 'Relatório de Dispositivos 24-09-24.xlsx')
 CAMINHO_ESTOQUE = os.path.join(BASE_DIR, 'data', 'Estoque atual.xlsx')
 CAMINHO_COTACAO = os.path.join(BASE_DIR, 'data', 'Cotacao.xlsx')
+CAMINHO_DESCARTE = os.path.join(BASE_DIR, 'data', 'Descarte.xlsx')
 
 #COMEÇO BACKEND CONTROLE DE EQUIPAMENTOS
 @app.route('/')
@@ -162,6 +163,24 @@ def adicionar_a_cotacao(equipamento, quantidade, link, data, tipo):
         
         # Salva as alterações de volta no arquivo Excel
         df.to_excel(CAMINHO_COTACAO, index=False)
+        return True, "Dados salvos com sucesso!"  # Retorna uma mensagem de sucesso
+    except Exception as e:
+        return False, str(e)  # Retorna a mensagem de erro
+
+# Função para adicionar dados à planilha de descartes
+def adicionar_ao_descarte(equipamento, serial, tipo, data, motivo, contato):
+    try:
+        # Carrega a planilha existente
+        df = pd.read_excel(CAMINHO_DESCARTE)
+        
+        # Cria uma nova linha com os dados recebidos como um DataFrame
+        nova_linha = pd.DataFrame({'Equipamento': [equipamento], 'Serial': [serial], 'Tipo':[tipo], 'Data':[data],"Motivo":[motivo],"Contato":[contato]})
+        
+        # Concatena a nova linha ao DataFrame existente
+        df = pd.concat([df, nova_linha], ignore_index=True)
+        
+        # Salva as alterações de volta no arquivo Excel
+        df.to_excel(CAMINHO_DESCARTE, index=False)
         return True, "Dados salvos com sucesso!"  # Retorna uma mensagem de sucesso
     except Exception as e:
         return False, str(e)  # Retorna a mensagem de erro
@@ -489,6 +508,103 @@ def exportar_planilha():
             return jsonify({'message': 'Planilha não encontrada.'}), 404
     except Exception as e:
         return jsonify({'message': f'Erro ao exportar planilha: {e}'}), 500
+    try:
+        # Verificar se o arquivo existe
+        if os.path.exists(CAMINHO_DESCARTE):
+            # Enviar o arquivo para download
+            return send_file(CAMINHO_DESCARTE, as_attachment=True)
+        else:
+            return jsonify({'message': 'Planilha não encontrada.'}), 404
+    except Exception as e:
+        return jsonify({'message': f'Erro ao exportar planilha: {e}'}), 500
+
+# CONTROLE DESCARTE
+@app.route('/submit_descarte', methods=['POST'])
+def submit_descarte():
+    try:
+        data = request.json
+        equipamento = data.get('equipamento')
+        serial = data.get('serial')
+        tipo = data.get('tipo')
+        data_item = data.get('data')  # Renomeado para 'data_item' para evitar conflito com o módulo 'data'
+        motivo = data.get('motivo')
+        contato = data.get('contato')
+        
+        # Adiciona os dados à planilha de Descarte
+        sucesso, mensagem = adicionar_ao_descarte(equipamento, serial, tipo, data_item, motivo, contato)
+        
+        if sucesso:
+            return jsonify({"message": "Dados de descarte enviados com sucesso!"}), 200
+        else:
+            return jsonify({"message": f"Erro ao salvar dados: {mensagem}"}), 500
+    except Exception as e:
+        return jsonify({"message": f"Ocorreu um erro: {str(e)}"}), 500
+
+@app.route('/contar_tipos_descarte', methods=['GET'])
+def contar_tipos_descarte():
+    try:
+        # Carrega a planilha de Descarte
+        df = pd.read_excel(CAMINHO_DESCARTE)
+
+        # Conta quantos de cada tipo de equipamento estão na planilha de Descarte
+        contagem = df['Tipo'].value_counts().to_dict()
+
+        # Retorna a contagem de cada tipo
+        return jsonify({
+            'maquinas': contagem.get('maquina', 0),
+            'perifericos': contagem.get('periferico', 0),
+            'cabos': contagem.get('cabo', 0),
+            'pecas': contagem.get('peca', 0),
+            'outros': contagem.get('outros', 0)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/obter_descartes', methods=['GET'])
+def obter_descartes():
+    try:
+        # Carrega a planilha com os descartes
+        df = pd.read_excel(CAMINHO_DESCARTE)
+
+        # Converte o DataFrame para uma lista de dicionários
+        descartes = df.to_dict(orient='records')
+
+        # Retorna os dados em formato JSON
+        return jsonify(descartes), 200
+    except Exception as e:
+        return jsonify({"message": f"Erro ao obter descartes: {str(e)}"}), 500
+
+@app.route('/excluir_descarte', methods=['POST'])
+def excluir_descarte():
+    try:
+        dados = request.get_json()
+        equipamento = dados.get('equipamento')
+
+        # Carrega a planilha de Descarte
+        df = pd.read_excel(CAMINHO_DESCARTE)
+
+        # Filtra as linhas que não correspondem ao equipamento a ser excluído
+        df_filtrado = df[df['Equipamento'] != equipamento]
+
+        # Salva as alterações de volta na planilha
+        df_filtrado.to_excel(CAMINHO_DESCARTE, index=False)
+
+        return jsonify({"message": "Item de descarte excluído com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Erro ao excluir o item de descarte: {str(e)}"}), 500
+
+@app.route('/exportar_planilha_descarte', methods=['GET'])
+def exportar_planilha_descarte():
+    try:
+        # Verificar se o arquivo existe
+        if os.path.exists(CAMINHO_DESCARTE):
+            # Enviar o arquivo de descarte para download
+            return send_file(CAMINHO_DESCARTE, as_attachment=True)
+        else:
+            return jsonify({'message': 'Planilha de descarte não encontrada.'}), 404
+    except Exception as e:
+        return jsonify({'message': f'Erro ao exportar planilha de descarte: {e}'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
