@@ -1,11 +1,12 @@
 window.onload = function() {
     var usuarioLogado = localStorage.getItem('usuarioLogado');
     var horaLogin = localStorage.getItem('horaLogin');
+    var nomeUsuario = localStorage.getItem('nomeUsuario');
     var tempoMaximo = 7 * 24 * 60 * 60 * 1000; // 7 dias em milissegundos
 
     if (usuarioLogado !== 'true' || !horaLogin) {
         // Se não estiver logado ou não houver hora de login, redireciona para a página de login
-        window.location.href = "./home/index.html";
+        window.location.href = "../home/index.html";
     } else {
         var agora = Date.now();
 
@@ -16,7 +17,13 @@ window.onload = function() {
             // Remove o estado de login e redireciona para a página de login
             localStorage.removeItem('usuarioLogado');
             localStorage.removeItem('horaLogin');
-            window.location.href = "./home/index.html";
+            localStorage.removeItem('nomeUsuario');
+            window.location.href = "../home/index.html";
+        } else {
+            // Exibe o nome do usuário na página, se estiver logado
+            if (nomeUsuario) {
+                document.getElementById('nomeUsuario').innerText = nomeUsuario;
+            }
         }
     }
 };

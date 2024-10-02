@@ -1,6 +1,7 @@
 window.onload = function() {
     var usuarioLogado = localStorage.getItem('usuarioLogado');
     var horaLogin = localStorage.getItem('horaLogin');
+    var nomeUsuario = localStorage.getItem('nomeUsuario');
     var tempoMaximo = 7 * 24 * 60 * 60 * 1000; // 7 dias em milissegundos
 
     if (usuarioLogado !== 'true' || !horaLogin) {
@@ -16,10 +17,17 @@ window.onload = function() {
             // Remove o estado de login e redireciona para a página de login
             localStorage.removeItem('usuarioLogado');
             localStorage.removeItem('horaLogin');
+            localStorage.removeItem('nomeUsuario');
             window.location.href = "./home/index.html";
+        } else {
+            // Exibe o nome do usuário na página, se estiver logado
+            if (nomeUsuario) {
+                document.getElementById('nomeUsuario').innerText = nomeUsuario;
+            }
         }
     }
 };
+
 function logout() {
     // Remove o estado de login e a hora do login do localStorage
     localStorage.removeItem('usuarioLogado');
@@ -231,19 +239,23 @@ document.addEventListener('DOMContentLoaded', function () {
         const adicionarBtn = document.getElementById('adicionarCotacaoBtn');
         const cancelarBtn = document.getElementById('cancelarCotacaoBtn');
     
+        if (!avisoElemento || !avisoMensagem || !adicionarBtn || !cancelarBtn) {
+            console.error("Elemento necessário não encontrado no DOM.");
+            return;
+        }
         // Define a mensagem e exibe a section
         avisoMensagem.textContent = mensagem;
         avisoElemento.style.display = 'block';
-    
+
         // Botão de adicionar à cotação
         adicionarBtn.onclick = function() {
             adicionarCotacao(equipamento);
-            avisoElemento.style.display = 'none';  // Oculta a section após a ação
+            avisoElemento.style.display = 'none';  // Oculta a section após adicionar
         };
-    
+
         // Botão de cancelar
         cancelarBtn.onclick = function() {
-            avisoElemento.style.display = 'none';  // Oculta a section
+            avisoElemento.style.display = 'none';  // Oculta a section de aviso
         };
     }
 });
