@@ -80,7 +80,6 @@ function logout() {
     window.location.href = "./home/index.html";  // ajuste o caminho conforme necessário
 }
 
-
 function atualizarContagemTipos() {
   fetch('/contar_tipos')
       .then(response => response.json())

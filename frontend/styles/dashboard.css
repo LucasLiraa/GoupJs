@@ -275,10 +275,35 @@ body.dark .sideMenuSwitch::before{
     padding: 20px;
     border-radius: 8px;
 }
-
+.dashboardTitle{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
 .dashboardTitle h1{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
     text-align: center;
     color: var(--text-color);
+}
+.dashControlButton button{
+    padding: 12px;
+    font-size: 1rem;
+
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
+    transition: var(--tran-04);
+}
+.dashControlButton button:hover{
+    color: var(--primary-color);
+    background-color: var(--toggle-color);
 }
 
 .dashboardOptions{
@@ -502,15 +527,15 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
 }
 
-.dashboardButtons{
+.buttonViewSheets{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    flex-direction: row;
+    flex-direction: column;
 
-    height: 10vh;
+    padding-top: 20px;
 }
-.dashboardButtons button{
+.buttonViewSheets button{
     width: 360px;
     height: 50px;
 
@@ -524,14 +549,10 @@ body.dark .sideMenuSwitch::before{
     background-color: var(--primary-color);
     transition: var(--tran-04);
 }
-.dashboardButtons button:hover{
+.buttonViewSheets button:hover{
     color: var(--primary-color);
     background-color: var(--toggle-color);
 }
-
-
-
-
 
 .buttonViewSheets table{
     width: 100%;

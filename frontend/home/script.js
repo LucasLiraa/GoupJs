@@ -9,7 +9,7 @@ function logar() {
         usuario = "Lucas Lira";
     } else if (login == "juliele.carvalho" && senha == "WHS@2024") {
         usuario = "Juliele Carvalho";
-    } else if (login == "sandrielle.almeida" && senha == "WHS@2024") {
+    } else if (login == "sandrielle.almeida" && senha == "TI@suporte2") {
         usuario = "Sandrielle Almeida";
     } else if (login == "anderson.brito" && senha == "WHS@2024") {
         usuario = "Anderson Brito";

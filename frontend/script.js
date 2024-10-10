@@ -366,35 +366,48 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.sideMenuSearch button').addEventListener('click', buscarSerial);
 });
 
-// Função para registrar a última atualização no localStorage
+// Função para registrar a última atualização no servidor
 function registrarUltimaAtualizacao() {
-    const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()} às ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-
     const nomeUsuario = localStorage.getItem('nomeUsuario'); // Nome do usuário logado
 
-    // Armazenar a data e o usuário no localStorage
-    localStorage.setItem('ultimaAtualizacao', formattedDate);
-    localStorage.setItem('usuarioUltimaAtualizacao', nomeUsuario);
-
-    // Atualizar a exibição
-    document.getElementById('ultimaAtualizacao').innerText = formattedDate;
-    document.getElementById('usuarioResponsavel').innerText = nomeUsuario;
+    // Enviar os dados para o servidor
+    fetch('/registrar_atualizacao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            nomeUsuario: nomeUsuario
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Atualizar a exibição com os dados retornados
+        document.getElementById('ultimaAtualizacao').innerText = data.ultimaAtualizacao.data;
+        document.getElementById('usuarioResponsavel').innerText = data.ultimaAtualizacao.usuario;
+    })
+    .catch((error) => {
+        console.error('Erro ao registrar a atualização:', error);
+    });
 }
 
 // Função para carregar os dados da última atualização na página
 function carregarUltimaAtualizacao() {
-    const ultimaAtualizacao = localStorage.getItem('ultimaAtualizacao');
-    const usuarioUltimaAtualizacao = localStorage.getItem('usuarioUltimaAtualizacao');
-
-    if (ultimaAtualizacao && usuarioUltimaAtualizacao) {
-        document.getElementById('ultimaAtualizacao').innerText = ultimaAtualizacao;
-        document.getElementById('usuarioResponsavel').innerText = usuarioUltimaAtualizacao;
-    } else {
-        document.getElementById('ultimaAtualizacao').innerText = 'Nenhuma atualização registrada';
-        document.getElementById('usuarioResponsavel').innerText = 'Desconhecido';
-    }
+    // Requisição ao servidor para obter a última atualização
+    fetch('/obter_atualizacao')
+    .then(response => response.json())
+    .then(data => {
+        if (data.data && data.usuario) {
+            document.getElementById('ultimaAtualizacao').innerText = data.data;
+            document.getElementById('usuarioResponsavel').innerText = data.usuario;
+        } else {
+            document.getElementById('ultimaAtualizacao').innerText = 'Nenhuma atualização registrada';
+            document.getElementById('usuarioResponsavel').innerText = 'Desconhecido';
+        }
+    })
+    .catch((error) => {
+        console.error('Erro ao carregar a última atualização:', error);
+    });
 }
 
 // Exemplo de como chamar a função registrarUltimaAtualizacao após uma ação (como adicionar ou excluir item)
@@ -402,6 +415,5 @@ document.getElementById('submitButton').addEventListener('click', function(event
     event.preventDefault();
     // Chame aqui a função de adicionar item e depois registre a atualização
     // adicionarSerial(serial, observacao, tipoDispositivo);  // Exemplo de chamada de função já existente
-
     registrarUltimaAtualizacao();  // Registra a atualização
 });

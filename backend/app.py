@@ -1,5 +1,6 @@
 from flask import Flask, send_from_directory, request, jsonify
 from flask import send_file
+from datetime import datetime
 import pandas as pd
 import os
 import re
@@ -22,6 +23,24 @@ def index():
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
+
+# Variável para armazenar a última atualização (pode ser um banco de dados)
+ultima_atualizacao = {'data': None, 'usuario': None}
+
+@app.route('/registrar_atualizacao', methods=['POST'])
+def registrar_atualizacao():
+    global ultima_atualizacao
+    data_atualizacao = datetime.now().strftime('%d/%m/%Y às %H:%M')
+    nome_usuario = request.json.get('nomeUsuario')
+
+    ultima_atualizacao['data'] = data_atualizacao
+    ultima_atualizacao['usuario'] = nome_usuario
+
+    return jsonify({"success": True, "ultimaAtualizacao": ultima_atualizacao})
+
+@app.route('/obter_atualizacao', methods=['GET'])
+def obter_atualizacao():
+    return jsonify(ultima_atualizacao)
 
 def verificarDispositivoOuPeriferico(mensagem):
     # Verificar se a mensagem contém o comando de exclusão com tipo de dispositivo

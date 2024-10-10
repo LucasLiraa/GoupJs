@@ -89,7 +89,13 @@
         <section class="sectionDashboard">
             <div class="dashboard">
                 <div class="dashboardTitle">
+                    
+                    <div class="dashControlButton">
+                        <button id="exportarEstoqueBtn">Exportar Planilha de Estoque</button>
+                    </div>
+
                     <h1>Dashboard de Estoque</h1>
+                
                 </div>
                 
                 <div class="dashboardOptions">
@@ -138,14 +144,9 @@
                     </div>
                 </div>
 
-                <div class="dashboardButtons">
-                    <div class="buttonViewSheets">
-                        <button onclick="visualizarEstoque()">Visualizar Estoque</button>
-                        <table id="tabelaEstoque" border="1"></table>
-                    </div>
-                    <div class="dashControlButton">
-                        <button id="exportarEstoqueBtn">Exportar Planilha de Estoque</button>
-                    </div>
+                <div class="buttonViewSheets">
+                    <button onclick="visualizarEstoque()">Visualizar Estoque</button>
+                    <table id="tabelaEstoque" border="1"></table>
                 </div>
             </div>
         </section>
