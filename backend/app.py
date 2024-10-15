@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory, request, jsonify
 from flask import send_file
 from datetime import datetime
 import pandas as pd
+import math
 import os
 import re
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def index():
 def static_files(path):
     return send_from_directory(FRONTEND_DIR, path)
 
-# Variável para armazenar a última atualização (pode ser um banco de dados)
+# Variável para armazenar a última atualização
 ultima_atualizacao = {'data': None, 'usuario': None}
 
 @app.route('/registrar_atualizacao', methods=['POST'])
@@ -42,6 +43,7 @@ def registrar_atualizacao():
 def obter_atualizacao():
     return jsonify(ultima_atualizacao)
 
+# CONTROLE DE EQUIPAMENTOS FUNCIONAMENTO
 def verificarDispositivoOuPeriferico(mensagem):
     # Verificar se a mensagem contém o comando de exclusão com tipo de dispositivo
     padrao_excluir_tipo = r'\bExcluir\s+(teclado|mouse|displayport|adaptador)\b'
@@ -51,13 +53,13 @@ def verificarDispositivoOuPeriferico(mensagem):
     padrao_serial = r'\b[A-Z0-9]{6,}\b'
     match_serial = re.search(padrao_serial, mensagem)
     
-    # Verificar se é um periférico (Monitor, Teclado, Mouse)
+    # Verificar se é um periférico
     padrao_periferico = r'\b(|teclado|mouse|displayport|adaptador)\b'
     match_periferico = re.search(padrao_periferico, mensagem, re.IGNORECASE)
     
     if match_excluir_tipo:
-        # Retorna o tipo de dispositivo para exclusão (ex: "Mouse", "Teclado")
-        return 'tipo', match_excluir_tipo.group(1).capitalize()  # Retorna o tipo de dispositivo com a primeira letra maiúscula
+        # Retorna o tipo de dispositivo para exclusão
+        return 'tipo', match_excluir_tipo.group(1).capitalize()
     elif match_serial:
         # Retorna o serial para exclusão
         return 'dispositivo', match_serial.group()
@@ -125,49 +127,107 @@ def adicDadosPeriferico(ModeloDispositivo, SerialDispositivo, TipoDispositivo, O
     except Exception as e:
         return f"Erro ao adicionar periférico à planilha de estoque: {e}"
 
-def excluir_item(serial):
-    # Use o caminho definido para carregar a planilha
+def excluir_item_ou_tipo(valor, por_serial=True):
+    # Carregar a planilha de estoque
     df = pd.read_excel(CAMINHO_ESTOQUE)
 
-    # Verificar se o serial existe na planilha
-    if serial in df['SerialDispositivo'].values:
-        # Excluir a linha correspondente ao serial
-        df = df[df['SerialDispositivo'] != serial]
+    if por_serial:
+        # Verificar se o valor é uma string válida antes de continuar
+        if not isinstance(valor, str) or not valor:
+            return False, 'Serial inválido fornecido'
 
-        # Salvar a planilha atualizada
-        df.to_excel(CAMINHO_ESTOQUE, index=False)
+        # Verificar se o serial existe na planilha
+        if valor in df['SerialDispositivo'].values:
+            # Excluir a linha correspondente ao serial
+            df = df[df['SerialDispositivo'] != valor]
+            df.to_excel(CAMINHO_ESTOQUE, index=False)
+            return True, f'Equipamento com serial {valor} excluído com sucesso'
+        else:
+            return False, 'Serial não encontrado no estoque'
 
-        return True
     else:
-        return False
+        # Verificar se o valor é uma string válida antes de usar contains
+        if not isinstance(valor, str) or not valor:
+            return False, 'Tipo de dispositivo inválido fornecido'
 
-def excluir_por_tipo(tipo):
+        # Encontrar o primeiro dispositivo do tipo correspondente
+        linha_para_excluir = df[df['TipoDispositivo'].str.contains(valor, case=False, na=False)].index
+
+        if not linha_para_excluir.empty:
+            # Excluir a primeira linha encontrada
+            df.drop(linha_para_excluir[0], inplace=True)
+            df.to_excel(CAMINHO_ESTOQUE, index=False)
+            return True, f'Um {valor} excluído com sucesso'
+        else:
+            return False, f'Tipo {valor} não encontrado no estoque'
+
+def obter_tipo_por_serial(serial):
+    # Carregar a planilha de estoque
     df = pd.read_excel(CAMINHO_ESTOQUE)
 
-    # Encontrar o primeiro dispositivo do tipo correspondente
-    linha_para_excluir = df[df['TipoDispositivo'].str.contains(tipo, case=False, na=False)].index
-
-    if not linha_para_excluir.empty:
-        # Excluir a primeira linha encontrada
-        df.drop(linha_para_excluir[0], inplace=True)
-
-        # Salvar a planilha atualizada
-        df.to_excel(CAMINHO_ESTOQUE, index=False)
-
-        return True, f'Um {tipo} excluído com sucesso'
+    # Procurar o tipo do dispositivo pelo serial
+    tipo_dispositivo = df.loc[df['SerialDispositivo'] == serial, 'TipoDispositivo'].values
+    if len(tipo_dispositivo) > 0:
+        return str(tipo_dispositivo[0])  # Garante que o tipo retornado seja uma string
     else:
-        return False, f'Tipo {tipo} não encontrado no estoque'
+        return None
 
 def contar_itens_por_tipo(tipo):
-    print(f"Contando itens do tipo: {tipo}")  # Log para verificar qual tipo está sendo contado
+    # Verifica se 'tipo' é uma string válida antes de continuar
+    if not isinstance(tipo, str) or not tipo:
+        raise ValueError("Tipo de dispositivo inválido fornecido para contagem")
+
+    # Carregar a planilha de estoque
     df = pd.read_excel(CAMINHO_ESTOQUE)
 
-    # Verifica a quantidade de itens do mesmo tipo
-    itens_do_tipo = df[df['TipoDispositivo'].str.contains(tipo, case=False, na=False)]
-    quantidade = len(itens_do_tipo)
-    print(f"Quantidade de itens do tipo {tipo}: {quantidade}")  # Log da quantidade encontrada
+    # Contar os itens do mesmo tipo
+    quantidade = df[df['TipoDispositivo'].str.contains(tipo, case=False, na=False)].shape[0]
     return quantidade
 
+def buscar_dispositivo_por_serial(serial):
+    try:
+        # Carregar a planilha de estoque
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+
+        # Verificar se o serial existe no DataFrame
+        dispositivo = df[df['SerialDispositivo'] == serial]
+
+        if not dispositivo.empty:
+            # Retornar as informações do dispositivo como um dicionário
+            return dispositivo.iloc[0].to_dict()
+        else:
+            # Se o serial não for encontrado, retorne None
+            return None
+    except Exception as e:
+        print(f"Ocorreu um erro ao buscar o serial: {e}")
+        return None
+
+def buscar_por_serial(serial):
+    try:
+        # Carregar a planilha de estoque
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+
+        # Verificar se o serial existe no DataFrame
+        dispositivo = df[df['SerialDispositivo'] == serial]
+
+        if not dispositivo.empty:
+            # Converter a linha encontrada em dicionário
+            dispositivo_dict = dispositivo.iloc[0].to_dict()
+
+            # Limpar valores NaN e substituir por None
+            for chave, valor in dispositivo_dict.items():
+                if isinstance(valor, float) and math.isnan(valor):
+                    dispositivo_dict[chave] = None  # Substitui NaN por None
+
+            # Retornar o dicionário com valores limpos
+            return dispositivo_dict
+        else:
+            # Se o serial não for encontrado, retorne None
+            return None
+    except Exception as e:
+        print(f"Ocorreu um erro ao buscar o serial: {e}")
+        return None
+    
 # Função para adicionar dados à planilha de cotacao
 def adicionar_a_cotacao(equipamento, quantidade, link, data, tipo):
     try:
@@ -261,58 +321,98 @@ def consulta():
 
 @app.route('/excluir', methods=['POST'])
 def excluir():
-    data = request.json
-    mensagem = data.get('mensagem')
-
-    if not mensagem:
-        return jsonify({'status': 'error', 'message': 'Mensagem não encontrada'}), 400
-
-    tipo_ou_serial, valor = verificarDispositivoOuPeriferico(mensagem)
-    if not valor:
-        return jsonify({'status': 'error', 'message': 'Nenhum serial ou tipo de dispositivo encontrado na mensagem'}), 400
-
-    if tipo_ou_serial == 'dispositivo':
-        # Exclusão por serial
-        if excluir_item(valor):
-            quantidade_restante = contar_itens_por_tipo(valor)  # Função para contar os itens restantes do mesmo tipo
-            
-            if quantidade_restante < 6:
-                return jsonify({'status': 'success', 'message': f'Equipamento com serial {valor} excluído com sucesso', 'aviso': f'Existem apenas {quantidade_restante} itens restantes. Deseja adicionar à cotação?'})
-            return jsonify({'status': 'success', 'message': f'Equipamento com serial {valor} excluído com sucesso'})
-        else:
-            return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
-    elif tipo_ou_serial == 'tipo':
-        # Exclusão por tipo de dispositivo
-        sucesso, mensagem = excluir_por_tipo(valor)
-        if sucesso:
-            quantidade_restante = contar_itens_por_tipo(valor)
-
-            if quantidade_restante < 6:
-                return jsonify({'status': 'success', 'message': mensagem, 'aviso': f'Existem apenas {quantidade_restante} {valor}s restantes. Deseja adicionar à cotação?'})
-            return jsonify({'status': 'success', 'message': mensagem})
-        else:
-            return jsonify({'status': 'error', 'message': mensagem}), 404
-
-@app.route('/buscar_serial', methods=['POST'])
-def buscar_por_serial():
     try:
         data = request.json
-        serial = data.get('serial')
-        
-        # Carregar a planilha de estoque
-        df = pd.read_excel(CAMINHO_ESTOQUE)
-        
-        # Verificar se o serial existe na planilha
-        resultado = df[df['SerialDispositivo'] == serial]
-        
-        if not resultado.empty:
-            # Converte a linha encontrada para dicionário
-            dispositivo = resultado.to_dict(orient='records')[0]
-            return jsonify({'status': 'success', 'dispositivo': dispositivo}), 200
-        else:
-            return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque.'}), 404
+        mensagem = data.get('mensagem')
+
+        if not mensagem:
+            return jsonify({'status': 'error', 'message': 'Mensagem não encontrada'}), 400
+
+        tipo_ou_serial, valor = verificarDispositivoOuPeriferico(mensagem)
+        if not valor:
+            return jsonify({'status': 'error', 'message': 'Nenhum serial ou tipo de dispositivo encontrado na mensagem'}), 400
+
+        if tipo_ou_serial == 'dispositivo':
+            # Verificar o tipo antes de excluir, pois o serial será removido da planilha
+            tipo_dispositivo = obter_tipo_por_serial(valor)
+
+            if not tipo_dispositivo:
+                return jsonify({'status': 'error', 'message': f'Tipo de dispositivo para o serial {valor} não encontrado'}), 404
+
+            # Excluir o dispositivo pelo serial
+            sucesso, mensagem_exclusao = excluir_item_ou_tipo(valor, por_serial=True)
+
+            if sucesso:
+                # Agora que o item foi excluído, contar os dispositivos restantes do mesmo tipo
+                quantidade_restante = contar_itens_por_tipo(tipo_dispositivo)
+
+                # Verificar se a quantidade restante é menor que 6
+                if quantidade_restante < 6:
+                    return jsonify({
+                        'status': 'success',
+                        'message': f'Equipamento com serial {valor} excluído com sucesso',
+                        'aviso': f'Existem apenas {quantidade_restante} itens do tipo {tipo_dispositivo} restantes. Deseja adicionar à cotação?'
+                    })
+                return jsonify({'status': 'success', 'message': f'Equipamento com serial {valor} excluído com sucesso'})
+            else:
+                return jsonify({'status': 'error', 'message': 'Serial não encontrado no estoque'}), 404
+
+        elif tipo_ou_serial == 'tipo':
+            # Exclusão por tipo de dispositivo
+            sucesso, mensagem_exclusao = excluir_item_ou_tipo(valor, por_serial=False)
+            if sucesso:
+                quantidade_restante = contar_itens_por_tipo(valor)
+
+                if quantidade_restante < 6:
+                    return jsonify({
+                        'status': 'success',
+                        'message': mensagem_exclusao,
+                        'aviso': f'Existem apenas {quantidade_restante} {valor}(s) restantes. Deseja adicionar à cotação?'
+                    })
+                return jsonify({'status': 'success', 'message': mensagem_exclusao})
+            else:
+                return jsonify({'status': 'error', 'message': mensagem_exclusao}), 404
+
+    except ValueError as ve:
+        return jsonify({'status': 'error', 'message': f'Ocorreu um erro de valor: {str(ve)}'}), 500
+
     except Exception as e:
-        return jsonify({'status': 'error', 'message': f'Erro ao buscar o serial: {str(e)}'}), 500
+        # Captura qualquer outra exceção e retorna uma resposta com o erro
+        return jsonify({'status': 'error', 'message': f'Ocorreu um erro: {str(e)}'}), 500
+
+
+    data = request.json
+    serial = data.get('serial')
+
+    # Verifique se o serial existe e busque os dados
+    dispositivo = buscar_dispositivo_por_serial(serial)
+
+    if dispositivo:
+        return jsonify({
+            'status': 'success',
+            'dispositivo': dispositivo
+        })
+    else:
+        return jsonify({
+            'status': 'error',
+            'message': 'Serial não encontrado'
+        }), 404
+
+@app.route('/buscar_serial', methods=['POST'])
+def buscar_serial():
+    data = request.get_json()
+    serial = data.get('serial')
+
+    if not serial:
+        return jsonify({'status': 'error', 'message': 'Serial não fornecido'}), 400
+
+    # Usar a nova função para buscar o dispositivo pelo serial
+    dispositivo = buscar_por_serial(serial)
+
+    if dispositivo:
+        return jsonify({'status': 'success', 'dispositivo': dispositivo}), 200
+    else:
+        return jsonify({'status': 'error', 'message': 'Serial não encontrado'}), 404
 #FIM BACKEND CONTROLE DE EQUIPAMENTOS
 
 
@@ -368,7 +468,6 @@ def exportar_planilha_estoque():
             return jsonify({'message': 'Planilha de estoque não encontrada.'}), 404
     except Exception as e:
         return jsonify({'message': f'Erro ao exportar planilha de estoque: {e}'}), 500
-
 #FINAL DASHBOARD FILTROS DE TODOS
 
 

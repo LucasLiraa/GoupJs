@@ -257,32 +257,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }    
 
     function exibirAvisoCotacao(mensagem, equipamento) {
-    const avisoElemento = document.getElementById('avisoCotacao');
-    const avisoMensagem = document.getElementById('avisoMensagem');
-    const adicionarBtn = document.getElementById('adicionarCotacaoBtn');
-    const cancelarBtn = document.getElementById('cancelarCotacaoBtn');
-
-    // Verificar se os elementos existem
-    if (!avisoElemento || !avisoMensagem || !adicionarBtn || !cancelarBtn) {
-        console.error("Elemento necessário não encontrado no DOM.");
-        return;
-    }
-
-    // Exibe a mensagem e a section de aviso
-    avisoMensagem.textContent = mensagem;
-    avisoElemento.style.display = 'block';
-
-    // Botão de adicionar à cotação
-    adicionarBtn.onclick = function() {
-        adicionarCotacao(equipamento);
-        avisoElemento.style.display = 'none';  // Oculta a section após adicionar à cotação
-    };
-
-    // Botão de cancelar
-    cancelarBtn.onclick = function() {
-        avisoElemento.style.display = 'none';  // Oculta a section de aviso
-    };
-}
+        const avisoElemento = document.getElementById('avisoCotacao');
+        const avisoMensagem = document.getElementById('avisoMensagem');
+        const adicionarBtn = document.getElementById('adicionarCotacaoBtn');
+        const cancelarBtn = document.getElementById('cancelarCotacaoBtn');
+    
+        // Verificar se os elementos existem
+        if (!avisoElemento || !avisoMensagem || !adicionarBtn || !cancelarBtn) {
+            console.error("Elemento necessário não encontrado no DOM.");
+            return;
+        }
+    
+        // Exibe a mensagem e a section de aviso
+        avisoMensagem.textContent = mensagem;
+        avisoElemento.style.display = 'block';
+    
+        // Botão de adicionar à cotação
+        adicionarBtn.onclick = function() {
+            adicionarCotacao(equipamento);
+            avisoElemento.style.display = 'none';  // Oculta a section após adicionar à cotação
+        };
+    
+        // Botão de cancelar
+        cancelarBtn.onclick = function(event) {
+            event.preventDefault();  // Impede a submissão do formulário
+            avisoElemento.style.display = 'none';  // Oculta a section de aviso
+        };
+    }    
 });
 
 // Função para exibir mensagens na tela
@@ -300,6 +301,10 @@ function exibirMensagem(mensagem, tipo) {
 
 document.querySelector('.closeFormButton').addEventListener('click', function() {
     document.querySelector('.sectionAlertForms').style.display = 'none';
+});
+
+document.querySelector('.closeResultButton').addEventListener('click', function() {
+    document.querySelector('.sectionSearchResult').style.display = 'none';
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -321,12 +326,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log(data);  // Verifique o conteúdo da resposta aqui
             const resultadoDiv = document.getElementById('resultadoBusca');
             const infoDiv = document.getElementById('informacoesDispositivo');
-
+        
             // Limpar qualquer resultado anterior
             infoDiv.innerHTML = '';
-
+        
             if (data.status === 'success') {
                 const dispositivo = data.dispositivo;
                 
@@ -337,10 +343,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 infoDiv.innerHTML += `<p><strong>Memória:</strong> ${dispositivo.MemoriaTotal}</p>`;
                 infoDiv.innerHTML += `<p><strong>Armazenamento:</strong> ${dispositivo.ArmazenamentoInterno}</p><br>`;
                 infoDiv.innerHTML += `<p><strong>Observação:</strong> ${dispositivo.ObservacaoDispositivo}</p>`;
-
+        
                 // Mostrar a section de resultado
                 resultadoDiv.style.display = 'block';
             } else {
+                // Exibir mensagem de erro
                 infoDiv.innerHTML = `<p>${data.message}</p>`;
                 resultadoDiv.style.display = 'block';
             }
@@ -351,20 +358,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Função para fechar a section de resultado
-    function fecharResultado() {
-        document.getElementById('resultadoBusca').style.display = 'none';
-    }
-
-    // Vincula a função fechar ao botão de fechar
-    document.querySelector('.closeResultButton').addEventListener('click', function(event) {
-        event.preventDefault(); // Impede o comportamento padrão do botão
-        fecharResultado();
-    });
-
     // Vincula a função buscar ao botão de busca
-    document.querySelector('.sideMenuSearch button').addEventListener('click', buscarSerial);
+    const searchButton = document.getElementById('buscarButton');  // Corrigido para usar ID
+    if (searchButton) {
+        searchButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do botão
+            buscarSerial();
+        });
+    }
 });
+
 
 // Função para registrar a última atualização no servidor
 function registrarUltimaAtualizacao() {

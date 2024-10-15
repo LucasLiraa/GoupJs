@@ -642,3 +642,11 @@ body.dark .sideMenuSwitch::before{
     background-color: var(--toggle-color);
     transition: var(--tran-04);
 }
+
+#modelDetails{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 500px;
+}

@@ -32,7 +32,7 @@
             <div class="sideMenuOptions">
                 <div class="sideMenuSelections">
                     <li class="sideMenuSearch">
-                            <button onclick="buscarSerial()"><i class='bx bx-search icon'></i></button>
+                            <button id="buscarButton" onclick="buscarSerial()"><i class='bx bx-search icon'></i></button>
                             <input type="text" id="serialInput" placeholder="Procurar..."> 
                     </li>
                     <ul class="sideMenuLinks">
@@ -86,7 +86,6 @@
             </div>
         </nav>
 
-        <!-- Seção de Log da Última Atualização -->
         <div class="stockControlLog">
             <h2>Última atualização do Estoque</h2>
             <p><strong>Feita em:</strong> <span id="ultimaAtualizacao">Carregando...</span></p>

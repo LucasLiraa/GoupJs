@@ -245,20 +245,33 @@ contarLinhasComObservacao();
 fetch('/get_device_info')
     .then(response => response.json())
     .then(data => {
+        console.log(data); // Verifique a estrutura dos dados aqui
+
         // Contar a frequência de cada modelo
         const ModelCounts = data.reduce((acc, item) => {
-            const modelo = item['ModeloDispositivo'];
+            const modelo = item['ModeloDispositivo']; // Nome correto da coluna para o modelo
             if (modelo) {
-                acc[modelo] = (acc[modelo] || 0) + 1;
+                if (!acc[modelo]) {
+                    acc[modelo] = { count: 0, details: [] };
+                }
+                acc[modelo].count++;
+                
+                // Acesse o nome do dispositivo
+                const nomeDispositivo = item['NomeDispositivo'] || 'Sem Nome'; // Verifique o nome correto da coluna
+                console.log(`Modelo: ${modelo}, Nome do Dispositivo: ${nomeDispositivo}`); // Debugging para ver o valor do nome
+                
+                const observacao = item['ObservacaoDispositivo'] || 'Nenhuma'; // Nome correto da coluna para observação
+                acc[modelo].details.push({ modelo, nomeDispositivo, observacao });
             }
             return acc;
         }, {});
 
         const ModelLabels = Object.keys(ModelCounts);
-        const ModelValues = Object.values(ModelCounts);
+        const ModelValues = ModelLabels.map(label => ModelCounts[label].count);
+        const ModelDetails = ModelCounts; // Armazenar detalhes dos modelos
 
         const ctxModel = document.getElementById('ChartsModels');
-        new Chart(ctxModel, {
+        const chart = new Chart(ctxModel, {
             type: 'bar',
             data: {
                 labels: ModelLabels,
@@ -298,11 +311,36 @@ fetch('/get_device_info')
                         top: 0,
                         bottom: 16,
                     },
+                },
+                onClick: (event) => {
+                    const activePoints = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+                    if (activePoints.length) {
+                        const firstPoint = activePoints[0];
+                        const modelo = ModelLabels[firstPoint.index];
+                        displayModelDetails(ModelDetails[modelo].details);
+                    }
                 }
             }
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
+
+function displayModelDetails(details) {
+    const detailsList = document.getElementById('detailsList');
+    detailsList.innerHTML = ''; // Limpa a lista existente
+
+    details.forEach(detail => {
+        // Formatar a string conforme desejado
+        const listItem = document.createElement('li');
+        listItem.textContent = `Modelo: ${detail.modelo}, Nome do Dispositivo: ${detail.nomeDispositivo}, Observação: ${detail.observacao}`;
+        detailsList.appendChild(listItem);
+    });
+
+    const modelDetailsSection = document.getElementById('modelDetails');
+    modelDetailsSection.style.display = 'block'; // Exibe a seção de detalhes
+}
+
+
 
 fetch('/get_device_info')
     .then(response => response.json())

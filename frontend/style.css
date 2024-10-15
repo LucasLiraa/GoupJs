@@ -25,7 +25,6 @@ body{
     background: var(--body-color);
     transition: var(--tran-05);
 }
-
 body.dark{
     --body-color: #18191A;
     --sidebar-color: #242526;
@@ -89,6 +88,7 @@ body.dark{
     color: var(--text-color);
     transition: var(--tran-02);
 }
+
 .sideMenu header{
     position: relative;
 }
@@ -132,6 +132,7 @@ header .sideMenuImage .sideMenuHeaderText{
 body.dark .sideMenu header .toggle{
     color: var(--text-color);
 }
+
 .sideMenu .sideMenuSelections{
     margin-top: 35px;
 }
@@ -278,7 +279,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 6px;
     padding: 20px;
     box-sizing: border-box;
-    background-color: var(--primary-color-light);
+    background-color: var(--sidebar-color);
     transition: height 0.3s ease-in-out;
 }
 
@@ -319,7 +320,7 @@ body.dark .sideMenuSwitch::before{
 .stockControlForms input:valid~label{
     top: -12px;
     font-size: 12px;
-    background: var(--primary-color-light);
+    background: var(--sidebar-color);
 }
 
 .stockControlForms input,
@@ -337,12 +338,12 @@ body.dark .sideMenuSwitch::before{
 .stockControlForms select:valid~label{
     top: -12px;
     font-size: 12px;
-    background: var(--primary-color-light);
+    background: var(--sidebar-color);
 }
 
 #tipoDispositivo {
-    background-color: var(--primary-color-light);
     color: var(--text-color);
+    background: var(--sidebar-color);
 }
 
 .stockControButtons{
@@ -439,14 +440,15 @@ body.dark .sideMenuSwitch::before{
 .formAlertContainer button{
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: var(--primary-color);
     color: var(--toggle-color);
+    background-color: var(--primary-color);
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 .formAlertContainer button#cancelarCotacaoBtn{
-    background-color: var(--text-color);
+    color: var(--primary-color);
+    background-color: var(--toggle-color);
 }
 .formAlertContainer button:hover{
     cursor: pointer;
@@ -456,8 +458,8 @@ body.dark .sideMenuSwitch::before{
 }
 .formAlertContainer button#cancelarCotacaoBtn:hover{
     cursor: pointer;
-    color: var(--primary-color);
-    background-color: var(--toggle-color);
+    color: var(--toggle-color);
+    background-color: var(--primary-color);
     transition: var(--tran-05);
 }
 
