@@ -275,6 +275,7 @@ body.dark .sideMenuSwitch::before{
     padding: 20px;
     border-radius: 8px;
 }
+
 .dashboardTitle{
     display: flex;
     justify-content: space-between;
@@ -345,7 +346,6 @@ body.dark .sideMenuSwitch::before{
     cursor: pointer;
 }
 
-
 .dashboardFilters{ 
     display: flex;
     flex-direction: row;
@@ -354,6 +354,7 @@ body.dark .sideMenuSwitch::before{
     width: 100%;
     margin: 20px 0 10px 0;
 }
+
 .dashboardFilters select{
     width: 200px;
     height: 36px;
@@ -376,7 +377,6 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
 }
 
-
 .dashboardCharts{
     display: flex;
     flex-direction: column;
@@ -387,7 +387,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 10px;
     background-color: var(--body-color);
 }
-.dashboardChartsUpAll{
+.dashboardChartsUpDesk{
     display: flex;
     flex-direction: row;
 
@@ -396,13 +396,14 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-around;
 }
-.dashboardChartDetailsAll,
-.dashboardChartAvailableAll{
+.dashboardChartAvailableDesk,
+.dashboardChartDetailsCDesk,
+.dashboardChartUseDesk{
     display: flex;
     flex-direction: column;
     position: relative;
 
-    width: 48%;
+    width: 32%;
     height: 120px;
     margin: 10px;
 
@@ -414,8 +415,9 @@ body.dark .sideMenuSwitch::before{
     border: 1px solid var(--text-color);
 
 }
-.dashboardChartDetailsAll label,
-.dashboardChartAvailableAll label{
+.dashboardChartAvailableDesk label,
+.dashboardChartDetailsCDesk label,
+.dashboardChartUseDesk label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -430,13 +432,14 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     background-color: var(--primary-color-light);
 }
-.dashboardChartDetailsAll h1,
-.dashboardChartAvailableAll h1{
+.dashboardChartAvailableDesk h1,
+.dashboardChartDetailsCDesk h1,
+.dashboardChartUseDesk h1{
     font-size: 36px;
     color: var(--text-color);
 }
 
-.dashboardChartsDownAll{
+.dashboardChartsDownDesk{
     display: flex;
     flex-direction: row;
 
@@ -446,7 +449,7 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: space-around;
 }
-.dashboardChartsLeftAll{
+.dashboardChartsLeftDesk{
     position: relative;
 
     width: 48%;
@@ -459,7 +462,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 10px;
     border: 1px solid var(--text-color);
 }
-.dashboardChartsModelsAll label{
+.dashboardChartsLeftDesk label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -474,11 +477,11 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     background-color: var(--primary-color-light);
 }
-.dashboardChartsModelsAll h1{
+.dashboardChartsLeftDesk h1{
     font-size: 36px;
     color: var(--text-color);
 }
-.dashboardChartsRightAll{
+.dashboardChartsRightDesk{
     display: flex;
     flex-direction: column;
 
@@ -489,14 +492,31 @@ body.dark .sideMenuSwitch::before{
     align-items: center;
     justify-content: center;
 }
-.dashboardChartStatsAll,
-.dashboardChartAmountAll{
+.dashboardChartsRightUpDesk{
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 50%;
+    
+    gap: 10px;
+}
+.dashboardChartsRightDownDesk{
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 50%;
+    
+    gap: 10px;
+}
+.dashboardChartDetailsDesk{
     display: flex;
     flex-direction: column;
     position: relative;
 
-    width: 100%;
-    height: 300px;
+    width: 60%;
+    height: 100%;
 
     align-items: center;
     justify-content: center;
@@ -505,8 +525,88 @@ body.dark .sideMenuSwitch::before{
     border-radius: 10px;
     border: 1px solid var(--text-color);
 }
-.dashboardChartStatsAll label,
-.dashboardChartAmountAll label{
+.dashboardChartDetailsMonitor{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartStorangeDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 40%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartRamDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 40%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartProcessorDesk{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 60%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+.dashboardChartAdaptador{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    width: 50%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--text-color);
+}
+
+.dashboardChartDetailsDesk label,
+.dashboardChartStorangeDesk label,
+.dashboardChartRamDesk label,
+.dashboardChartProcessorDesk label,
+.dashboardChartDetailsMonitor label,
+.dashboardChartAdaptador label{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -521,39 +621,37 @@ body.dark .sideMenuSwitch::before{
     color: var(--text-color);
     background-color: var(--primary-color-light);
 }
-.dashboardChartStatsAll h1,
-.dashboardChartAmountAll h1{
-    font-size: 36px;
-    color: var(--text-color);
-}
+
 
 .buttonViewSheets{
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    padding-top: 20px;
+    width: 100%;
 }
 .buttonViewSheets button{
-    width: 360px;
-    height: 50px;
+    width: 200px;
+    height: 36px;
 
-    font-size: 1.2rem;
-
-    border: none;
     border-radius: 6px;
-    cursor: pointer;
+    font-size: 20px;
+    margin: 20px;
 
     color: var(--toggle-color);
     background-color: var(--primary-color);
+    
+    cursor: pointer;
+    outline: none;
+    border: none;
+
     transition: var(--tran-04);
 }
 .buttonViewSheets button:hover{
     color: var(--primary-color);
     background-color: var(--toggle-color);
 }
-
 .buttonViewSheets table{
     width: 100%;
     border: none;
@@ -578,121 +676,4 @@ body.dark .sideMenuSwitch::before{
 
     color: var(--toggle-color);
     background-color: var(--primary-color);
-}
-
-
-.sectionSearchResult{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: fixed;
-    top: 0;
-    left: 250px;
-    height: 100%;
-    width: calc(100% - 250px);
-    z-index: 10;
-
-    background-color: rgba(0, 0, 0, 0.8);
-    transition: var(--tran-05);
-}
-.sideMenu.close~.sectionSearchResult{
-    left: 88px;
-    width: calc(100% - 88px);
-}
-
-.formSearchContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centraliza no eixo X e Y */
-
-    padding: 20px;
-    width: 40%;
-    border-radius: 10px;
-
-    color: var(--text-color);
-    background-color: var(--sidebar-color);  
-}
-.formSearchContent{
-    width: 100%;
-    padding: 20px;
-    margin: 10px 0 10px 0;
-
-    color: var(--text-color);
-}
-.closeResultButton{
-    width: 120px;
-    height: 50px;
-
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-
-    color: var(--toggle-color);
-    background-color: var(--primary-color);
-}
-.closeResultButton:hover{
-    color: var(--primary-color);
-    background-color: var(--toggle-color);
-    transition: var(--tran-04);
-}
-
-
-
-
-.sectionDetailsList{
-    display: none;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-
-    top: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.detailList{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: relative;
-
-    width: 80%;
-    height: 80%;
-
-    border-radius: 10px;
-
-    background-color: var(--sidebar-color);
-}
-
-.detailListButton{
-    position: absolute;
-    
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-
-    color: var(--toggle-color);
-    background-color: var(--primary-color);
-}
-
-.detailListButton:hover{
-    color: var(--primary-color);
-    background-color: var(--toggle-color);
-    transition: var(--tran-05);
 }

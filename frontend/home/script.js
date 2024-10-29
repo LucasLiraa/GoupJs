@@ -11,9 +11,9 @@ function logar() {
         usuario = "Juliele Carvalho";
     } else if (login == "sandrielle.almeida" && senha == "TI@suporte2") {
         usuario = "Sandrielle Almeida";
-    } else if (login == "anderson.brito" && senha == "WHS@2024") {
+    } else if (login == "anderson.brito" && senha == "infra@estoque") {
         usuario = "Anderson Brito";
-    } else if (login == "ivo.vieira" && senha == "WHS@2024") {
+    } else if (login == "ivo.vieira" && senha == "infra@estoque") {
         usuario = "Ivo Vieira";
     } else {
         alert('Usuário ou senha incorretos');
@@ -30,3 +30,17 @@ function logar() {
     // Redireciona para a página inicial
     location.href = "../index.html";
 }
+
+const togglePassword = document.querySelector('#togglePassword');
+const passwordField = document.querySelector('#senha');
+const icon = togglePassword.querySelector('i');
+
+togglePassword.addEventListener('click', function () {
+    // Alterna o tipo do input entre 'password' e 'text'
+    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', type);
+
+    // Alterna o ícone entre 'fa-eye' e 'fa-eye-slash'
+    icon.classList.toggle('fa-eye-slash');
+    icon.classList.toggle('fa-eye');
+});

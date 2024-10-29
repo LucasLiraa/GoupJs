@@ -4,7 +4,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <title>Dashboard | Notebooks</title>
+            <title>Dashboard | Monitores</title>
             
             <link rel="shortcut icon" href="../imgs/logo.ico">
             <link rel="stylesheet" href="./styles/selections.css">
@@ -92,8 +92,9 @@
                     <div class="dashControlButton">
                         <button id="exportarEstoqueBtn">Exportar Planilha de Estoque</button>
                     </div>
-                    <h1>Dashboard | Notebooks</h1>
+                    <h1>Dashboard | Monitores</h1>
                 </div>
+                
                 <div class="dashboardOptions">
                     <div class="dashboardSearch">
                         <button><i class='bx bx-search icon'></i></button>
@@ -102,10 +103,10 @@
                     <div class="dashboardFilters">
                         <h3>Selecione os Equipamentos:</h3>
                         <select id="deviceType" name="deviceType" onchange="navigateToLink()">
-                            <option value="">Notebooks</option>
+                            <option value="">Monitores</option>
                             <option value="../pages/dashboard.html">Todos</option>
                             <option value="./desktops.html">Desktops</option>
-                            <option value="./monitores.html">Monitores</option>
+                            <option value="./notebooks.html">Notebooks</option>
                             <option value="./perifericos.html">Perifericos</option>
                         </select>
                     </div>
@@ -115,43 +116,39 @@
                     <div class="dashboardChartsUpDesk">
                         <div class="dashboardChartAvailableDesk">
                             <label>Total Disponível</label>
-                            <h1 id="linhasNotebooks"></h1>
+                            <h1 id="linhasMonitores"></h1>
                         </div>
                         <div class="dashboardChartDetailsCDesk">
                             <label>Com Detalhes</label>
-                            <h1 id="linhasObservacaoNotebook"></h1>
+                            <h1 id="linhasObservacaoMonitor"></h1>
                         </div>
                         <div class="dashboardChartUseDesk">
                             <label>Pronto para Uso</label>
-                            <h1 id="resultadonotebooks"></h1>
+                            <h1 id="resultadoMonitores"></h1>
                         </div>
                     </div>
                     <div class="dashboardChartsDownDesk">
                         <div class="dashboardChartsLeftDesk">
                             <div class="dashboardChartsModelsDesk">
                                 <label>Modelos</label>
-                                <canvas id="ChartsModelNotebooks"></canvas>
+                                <canvas id="ChartsModelMonitores"></canvas>
                             </div>
                         </div>
                         <div class="dashboardChartsRightDesk">
                             <div class="dashboardChartsRightUpDesk">
-                                <div class="dashboardChartDetailsDesk">
+                                <div class="dashboardChartDetailsMonitor">
                                     <label>Detalhes</label>
-                                    <canvas id="ChartsObservationsNotebooks"></canvas>
-                                </div>
-                                <div class="dashboardChartStorangeDesk">
-                                    <label>Armazenamento</label>
-                                    <canvas id="ChartsStorangeNotebooks"></canvas>
+                                    <canvas id="ChartsObservationsMonitores"></canvas>
                                 </div>
                             </div>
                             <div class="dashboardChartsRightDownDesk">
-                                <div class="dashboardChartRamDesk">
-                                    <label>Memória</label>
-                                    <canvas id="ChartsMemoryNotebooks"></canvas>
+                                <div class="dashboardChartAdaptador">
+                                    <label>Adaptadores</label>
+                                    <canvas id="ChartsModelAdaptadores"></canvas>
                                 </div>
-                                <div class="dashboardChartProcessorDesk">
-                                    <label>Processador</label>
-                                    <canvas id="ChartsProcessorNotebooks"></canvas>
+                                <div class="dashboardChartAdaptador">
+                                    <label>DisplayPort</label>
+                                    <canvas id="ChartsModelDisplayport"></canvas>
                                 </div>
                             </div>
                         </div>

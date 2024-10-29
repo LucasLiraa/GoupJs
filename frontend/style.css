@@ -377,7 +377,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 6px;
     padding: 10px;
     margin-top: 10px;
-    background-color: var(--primary-color-light)
+    background-color: var(--sidebar-color);
 
 }
 .erro {
@@ -386,7 +386,7 @@ body.dark .sideMenuSwitch::before{
     border-radius: 6px;
     padding: 10px;
     margin-top: 10px;
-    background-color: var(--primary-color-light)
+    background-color: var(--sidebar-color);
 }
 
 .sectionAlertForms{

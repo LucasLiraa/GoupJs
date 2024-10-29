@@ -423,7 +423,7 @@ def get_device_info():
     df = pd.read_excel('../backend/data/Estoque atual.xlsx')
     
     # Selecione as colunas que deseja retornar
-    device_info = df[['ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'ArmazenamentoInterno', 'ObservacaoDispositivo', 'TipoDispositivo']].to_dict(orient='records')
+    device_info = df[['ModeloDispositivo', 'ProcessadorUsado', 'MemoriaTotal', 'ArmazenamentoInterno', 'ObservacaoDispositivo', 'TipoDispositivo', 'NomeDispositivo']].to_dict(orient='records')
     
     return jsonify(device_info)
 
@@ -551,6 +551,65 @@ def contar_linhas_com_observacao_notebook():
         return jsonify({'error': f'Erro ao contar as linhas com observação e notebooks: {e}'}), 500
 #FINAL DASHBOARD FILTROS DOS NOTEBOOKS  
 
+#COMEÇO DASHBOARD FILTROS DOS MONITORES
+@app.route('/contar_linhas_monitores', methods=['GET'])
+def contar_linhas_monitores():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Monitor'
+        df_monitores = df[df['TipoDispositivo'] == 'Monitor']
+        
+        # Contar as linhas filtradas
+        linhas_monitores = df_monitores.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_monitores': linhas_monitores})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas de monitores: {e}'}), 500
+
+@app.route('/contar_linhas_com_observacao_monitores', methods=['GET'])
+def contar_linhas_com_observacao_monitores():
+    try:
+        # Carregar o DataFrame da planilha Excel
+        df = pd.read_excel(CAMINHO_ESTOQUE)
+        
+        # Filtrar as linhas onde 'TipoDispositivo' é igual a 'Monitor', 'Observacao' não está vazia e não é 'Não possui'
+        df_filtrado = df[
+            (df['TipoDispositivo'] == 'Monitor') &
+            (df['ObservacaoDispositivo'].notna()) &
+            (df['ObservacaoDispositivo'] != 'Não possui')
+        ]
+        
+        # Contar as linhas filtradas
+        contar_linhas_com_observacao_monitores = df_filtrado.shape[0]
+        
+        # Retornar o resultado como JSON
+        return jsonify({'linhas_com_observacao_monitor': contar_linhas_com_observacao_monitores})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao contar as linhas com observação e monitores: {e}'}), 500
+#FINAL DASHBOARD FILTROS DOS MONITORES 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #COMEÇO VISUALIZAÇÃO EM PLANILHA
 @app.route('/visualizar_estoque', methods=['GET'])
 def visualizar_estoque():
@@ -573,6 +632,29 @@ def visualizar_estoque_notebook():
     data = df.to_dict(orient='records')  # Converte os dados para um dicionário (JSON)
     return jsonify(data)  # Retorna os dados como JSON
 #FINAL VISUALIZAÇÃO EM PLANILHA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #CONTROLE REPOSIÇÃO
 @app.route('/submit', methods=['POST'])

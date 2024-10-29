@@ -109,6 +109,8 @@
                             <option value="">Todos</option>
                             <option value="../routes/desktops.html">Desktops</option>
                             <option value="../routes/notebooks.html">Notebooks</option>
+                            <option value="../routes/monitores.html">Monitores</option>
+                            <option value="../routes/perifericos.html">Perifericos</option>
                         </select>
                     </div>
                 </div>
@@ -152,11 +154,16 @@
         </section>
 
 
-        <!-- Seção para detalhes -->
-        <div id="modelDetails" style="display:none; margin-top: 20px;">
-            <h3>Detalhes do Modelo</h3>
-            <ul id="detailsList"></ul>
-        </div>
+        <section class="sectionDetailsList" id="modelDetails">
+            <div class="detailList">
+                <button class="detailListButton" onclick="closeModelDetails()">Fechar</button>
+                <h3>Detalhes do Modelo</h3>
+                <ul id="detailsList"></ul>
+            </div>
+        </section>
+        
+        
+        
 
 
         <section class="sectionSearchResult" id="resultadoBusca" style="display: none;">

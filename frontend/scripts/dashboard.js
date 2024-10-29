@@ -43,7 +43,6 @@ window.onload = function() {
         modeText.innerText = "Dark Mode";
     }
 };
-
 // Alterna o modo e salva a preferência no LocalStorage
 const body = document.querySelector("body"),
       sidebar = body.querySelector(".sideMenu"),
@@ -62,7 +61,6 @@ modeSwitch.addEventListener("click", () => {
         localStorage.setItem('modoEscuro', 'claro');   // Salva a preferência
     }
 });
-
 // Controla a exibição da sidebar
 toggle.addEventListener("click", () => {
     sidebar.classList.toggle("close");
@@ -105,123 +103,6 @@ function buscarSerial() {
     });
 }
 
-// Contagem e Atualização de Desktops e Notebooks
-async function contarLinhasDesktops() {
-    try {
-        const response = await fetch('/contar_linhas_desktops');
-        const data = await response.json();
-
-        if (data.linhas_desktops !== undefined) {
-            const totalDesktopsElement = document.getElementById('linhasDesktops');
-            if (totalDesktopsElement) {
-                totalDesktopsElement.textContent = data.linhas_desktops;
-                atualizarResultadoDesktops();
-            } else {
-                console.error("Elemento 'linhasDesktops' não encontrado.");
-            }
-        } else {
-            console.error('Erro ao contar as linhas de desktops:', data.error);
-        }
-    } catch (error) {
-        console.error('Erro ao contar as linhas de desktops:', error);
-    }
-}
-async function contarLinhasComObservacaoDesktop() {
-    try {
-        const response = await fetch('/contar_linhas_com_observacao_desktop');
-        const data = await response.json();
-
-        if (data.linhas_com_observacao_desktop !== undefined) {
-            const observacaoDesktopElement = document.getElementById('linhasObservacaoDesktop');
-            if (observacaoDesktopElement) {
-                observacaoDesktopElement.textContent = data.linhas_com_observacao_desktop;
-                atualizarResultadoDesktops();
-            } else {
-                console.error("Elemento 'linhasObservacaoDesktop' não encontrado.");
-            }
-        } else {
-            console.error('Erro ao contar as linhas com observação e Desktop:', data.error);
-        }
-    } catch (error) {
-        console.error('Erro ao contar as linhas com observação e Desktop:', error);
-    }
-}
-function atualizarResultadoDesktops() {
-    const totalDesktopsElement = document.getElementById('linhasDesktops');
-    const observacaoDesktopElement = document.getElementById('linhasObservacaoDesktop');
-    const resultadoDesktopElement = document.getElementById('resultadodesktop');
-
-    if (totalDesktopsElement && observacaoDesktopElement && resultadoDesktopElement) {
-        const totalDesktops = parseInt(totalDesktopsElement.textContent);
-        const totalObservacaoDesktop = parseInt(observacaoDesktopElement.textContent);
-
-        if (!isNaN(totalDesktops) && !isNaN(totalObservacaoDesktop)) {
-            const resultado = totalDesktops - totalObservacaoDesktop;
-            resultadoDesktopElement.textContent = resultado;
-        }
-    } else {
-        console.error("Elementos necessários para 'atualizarResultadoDesktop' não foram encontrados.");
-    }
-}
-
-async function contarLinhasNotebooks() {
-    try {
-        const response = await fetch('/contar_linhas_notebooks');
-        const data = await response.json();
-
-        if (data.linhas_notebooks !== undefined) {
-            const totalNotebooksElement = document.getElementById('linhasNotebooks');
-            if (totalNotebooksElement) {
-                totalNotebooksElement.textContent = data.linhas_notebooks;
-                atualizarResultadoNotebooks();
-            } else {
-                console.error("Elemento 'linhasNotebooks' não encontrado.");
-            }
-        } else {
-            console.error('Erro ao contar as linhas de Notebooks:', data.error);
-        }
-    } catch (error) {
-        console.error('Erro ao contar as linhas de Notebooks:', error);
-    }
-}
-async function contarLinhasComObservacaoNotebooks() {
-    try {
-        const response = await fetch('/contar_linhas_com_observacao_notebooks');
-        const data = await response.json();
-
-        if (data.linhas_com_observacao_notebooks !== undefined) {
-            const observacaoNotebooksElement = document.getElementById('linhasObservacaoNotebooks');
-            if (observacaoNotebooksElement) {
-                observacaoNotebooksElement.textContent = data.linhas_com_observacao_notebooks;
-                atualizarResultadoNotebooks();
-            } else {
-                console.error("Elemento 'linhasObservacaoDesktop' não encontrado.");
-            }
-        } else {
-            console.error('Erro ao contar as linhas com observação e Notebooks:', data.error);
-        }
-    } catch (error) {
-        console.error('Erro ao contar as linhas com observação e Notebooks:', error);
-    }
-}
-function atualizarResultadoNotebooks() {
-    const totalNotebooksElement = document.getElementById('linhasNotebooks');
-    const observacaoNotebooksElement = document.getElementById('linhasObservacaoNotebooks');
-    const resultadoNotebooksElement = document.getElementById('resultadonotebooks');
-
-    if (totalNotebooksElement && observacaoNotebooksElement && resultadoNotebooksElement) {
-        const totalNotebooks = parseInt(totalNotebooksElement.textContent);
-        const totalObservacaoNotebooks = parseInt(observacaoNotebooksElement.textContent);
-
-        if (!isNaN(totalNotebooks) && !isNaN(totalObservacaoNotebooks)) {
-            const resultado = totalNotebooks - totalObservacaoNotebooks;
-            resultadoNotebooksElement.textContent = resultado;
-        }
-    } else {
-        console.error("Elementos necessários para 'atualizarResultadoNotebooks' não foram encontrados.");
-    }
-}
-
 //COMEÇO FUNÇÕES DASHBOARD TODOS
 function contarLinhasPreenchidas() {
     fetch('/contar_linhas_preenchidas')
@@ -232,6 +113,7 @@ function contarLinhasPreenchidas() {
         .catch(error => console.error('Erro ao contar as linhas preenchidas:', error));
 }
 contarLinhasPreenchidas();
+
 function contarLinhasComObservacao() {
     fetch('/contar_linhas_com_observacao')
         .then(response => response.json())
@@ -255,11 +137,10 @@ fetch('/get_device_info')
                     acc[modelo] = { count: 0, details: [] };
                 }
                 acc[modelo].count++;
-                
-                // Acesse o nome do dispositivo
-                const nomeDispositivo = item['NomeDispositivo'] || 'Sem Nome'; // Verifique o nome correto da coluna
-                console.log(`Modelo: ${modelo}, Nome do Dispositivo: ${nomeDispositivo}`); // Debugging para ver o valor do nome
-                
+
+                const nomeDispositivo = item['NomeDispositivo'] || item['DispositivoNome'] || item['Nome'];
+                console.log(`Modelo: ${modelo}, Nome do Dispositivo: ${nomeDispositivo}`);
+
                 const observacao = item['ObservacaoDispositivo'] || 'Nenhuma'; // Nome correto da coluna para observação
                 acc[modelo].details.push({ modelo, nomeDispositivo, observacao });
             }
@@ -328,19 +209,20 @@ fetch('/get_device_info')
 function displayModelDetails(details) {
     const detailsList = document.getElementById('detailsList');
     detailsList.innerHTML = ''; // Limpa a lista existente
-
+    
     details.forEach(detail => {
-        // Formatar a string conforme desejado
         const listItem = document.createElement('li');
         listItem.textContent = `Modelo: ${detail.modelo}, Nome do Dispositivo: ${detail.nomeDispositivo}, Observação: ${detail.observacao}`;
         detailsList.appendChild(listItem);
     });
-
+    
     const modelDetailsSection = document.getElementById('modelDetails');
-    modelDetailsSection.style.display = 'block'; // Exibe a seção de detalhes
+    modelDetailsSection.style.display = 'flex'; // Exibe a seção de detalhes
 }
-
-
+function closeModelDetails() {
+    const modelDetailsSection = document.getElementById('modelDetails');
+    modelDetailsSection.style.display = 'none'; // Esconde a seção de detalhes
+}
 
 fetch('/get_device_info')
     .then(response => response.json())
@@ -861,7 +743,6 @@ fetch('/get_device_info')
     .catch(error => console.error('Erro ao carregar os dados:', error));
 //FIM FUNÇÕES DASHBOARD DESKTOPS
 
-
 //COMEÇO FUNÇÕES DASHBOARD NOTEBOOKS
 function contarLinhasNotebooks() {
     fetch('/contar_linhas_notebooks')
@@ -1246,6 +1127,323 @@ fetch('/get_device_info')
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 //FIM FUNÇÕES DASHBOARD NOTEBOOKS
+
+//COMEÇO FUNÇÕES DASHBOARD MONITORES
+function contarLinhasMonitores() {
+    fetch('/contar_linhas_monitores')
+        .then(response => response.json())
+        .then(data => {
+            if (data.linhas_monitores !== undefined) {
+                totalMonitores = data.linhas_monitores;
+                document.getElementById('linhasMonitores').textContent = totalMonitores;
+                atualizarResultadoMonitores(); // Atualiza o resultado sempre que totalMonitores for atualizado
+            } else {
+                console.error('Erro ao contar as linhas de monitores:', data.error);
+            }
+        })
+        .catch(error => console.error('Erro ao contar as linhas de monitores:', error));
+}
+function contarLinhasComObservacaoMonitores() {
+    fetch('/contar_linhas_com_observacao_monitores')
+        .then(response => response.json())
+        .then(data => {
+            if (data.linhas_com_observacao_monitor !== undefined) {
+                totalObservacaoMonitores = data.linhas_com_observacao_monitor;
+                document.getElementById('linhasObservacaoMonitor').textContent = totalObservacaoMonitores;
+                atualizarResultadoMonitores(); // Atualiza o resultado sempre que totalObservacaoMonitores for atualizado
+            } else {
+                console.error('Erro ao contar as linhas com observação e Monitores:', data.error);
+            }
+        })
+        .catch(error => console.error('Erro ao contar as linhas com observação e Monitores:', error));
+}
+function atualizarResultadoMonitores() {
+    const totalMonitoresElement = document.getElementById('linhasMonitores');
+    const observacaoMonitoresElement = document.getElementById('linhasObservacaoMonitor');
+    const resultadoMonitoresElement = document.getElementById('resultadoMonitores');
+
+    if (totalMonitoresElement && observacaoMonitoresElement && resultadoMonitoresElement) {
+        const totalMonitores = parseInt(totalMonitoresElement.textContent);
+        const totalObservacaoMonitores = parseInt(observacaoMonitoresElement.textContent);
+
+        if (!isNaN(totalMonitores) && !isNaN(totalObservacaoMonitores)) {
+            const resultado = totalMonitores - totalObservacaoMonitores;
+            resultadoMonitoresElement.textContent = resultado;
+        }
+    } else {
+        console.error("Elementos necessários para 'atualizarResultadoMonitores' não foram encontrados.");
+    }
+}
+contarLinhasMonitores();
+contarLinhasComObservacaoMonitores();
+
+fetch('/get_device_info')
+    .then(response => response.json())
+    .then(data => {
+        // Filtrar apenas as linhas onde TipoDispositivo é 'Monitor'
+        const monitorData = data.filter(item => item['TipoDispositivo'] === 'Monitor');
+
+        // Contar a frequência de cada modelo
+        const ModelMonitores = monitorData.reduce((acc, item) => {
+            const modelo = item['ModeloDispositivo'];
+            if (modelo) {
+                acc[modelo] = (acc[modelo] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        const ModelMonitoresLabels = Object.keys(ModelMonitores);
+        const ModelMonitoresValues = Object.values(ModelMonitores);
+
+        const ctx = document.getElementById('ChartsModelMonitores');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ModelMonitoresLabels,
+                datasets: [{
+                    data: ModelMonitoresValues,
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
+                    borderWidth: 3,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 20,
+                        left: 30,
+                        right: 20
+                    },
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Erro ao carregar os dados:', error));
+
+fetch('/get_device_info')
+    .then(response => response.json())
+    .then(data => {
+        // Filtrar apenas as linhas onde TipoDispositivo é 'Monitor'
+        const monitorData = data.filter(item => item['TipoDispositivo'] === 'Monitor');
+
+        // Filtrar dados para remover itens com a observação "Não possui"
+        const filteredData = monitorData.filter(item => item['ObservacaoDispositivo'] !== 'Não possui');
+
+        // Contar a frequência de cada Observação entre os dispositivos filtrados
+        const ObservationMonitorCounts = filteredData.reduce((acc, item) => {
+            const Observation = item['ObservacaoDispositivo'];
+            if (Observation) {
+                acc[Observation] = (acc[Observation] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        const ObservationMonitorLabels = Object.keys(ObservationMonitorCounts);
+        const ObservationMonitorValues = Object.values(ObservationMonitorCounts);
+
+        // Criar o gráfico de status
+        const ctxStatus = document.getElementById('ChartsObservationsMonitores').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'bar',
+            data: {
+                labels: ObservationMonitorLabels,
+                datasets: [{
+                    data: ObservationMonitorValues,
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
+                    borderWidth: 3,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                },
+                layout: {
+                    padding: 10
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Erro ao carregar os dados:', error));
+
+fetch('/get_device_info')
+    .then(response => response.json())
+    .then(data => {
+        // Filtrar apenas as linhas onde TipoDispositivo é 'Monitor'
+        const adaptadorData = data.filter(item => item['TipoDispositivo'] === 'Adaptador');
+
+        // Contar a frequência de cada modelo
+        const ModelAdaptador = adaptadorData.reduce((acc, item) => {
+            const Tipo = item['TipoDispositivo'];
+            if (Tipo) {
+                acc[Tipo] = (acc[Tipo] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        const ModelAdaptadorLabels = Object.keys(ModelAdaptador);
+        const ModelAdaptadorValues = Object.values(ModelAdaptador);
+
+        const ctx = document.getElementById('ChartsModelAdaptadores');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ModelAdaptadorLabels,
+                datasets: [{
+                    data: ModelAdaptadorValues,
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
+                    borderWidth: 3,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: {
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 20,
+                        left: 30,
+                        right: 20
+                    },
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Erro ao carregar os dados:', error));
+
+fetch('/get_device_info')
+    .then(response => response.json())
+    .then(data => {
+        // Filtrar apenas as linhas onde TipoDispositivo é 'Monitor'
+        const displayportData = data.filter(item => item['TipoDispositivo'] === 'Displayport');
+
+        // Contar a frequência de cada modelo
+        const ModelDisplayport = displayportData.reduce((acc, item) => {
+            const Tipo = item['TipoDispositivo'];
+            if (Tipo) {
+                acc[Tipo] = (acc[Tipo] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        const ModelDisplayportLabels = Object.keys(ModelDisplayport);
+        const ModelDisplayportValues = Object.values(ModelDisplayport);
+
+        const ctx = document.getElementById('ChartsModelDisplayport');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ModelDisplayportLabels,
+                datasets: [{
+                    data: ModelDisplayportValues,
+                    backgroundColor: '#07547398',
+                    borderColor: '#075473',
+                    borderWidth: 3,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: {
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 20,
+                        left: 30,
+                        right: 20
+                    },
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Erro ao carregar os dados:', error));
+//FIM FUNÇÕES DASHBOARD MONITORES
+
+
 
 //FUNÇÕES COMPLEMENTARES DASHBOARD
 function navigateToLink() {

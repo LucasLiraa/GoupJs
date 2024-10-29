@@ -139,3 +139,25 @@ input:-webkit-autofill {
     color: var(--toggle-color);
     background-color: var(--body-color);
 }
+
+#togglePassword{
+    top: 10px;
+    right: 10px;
+
+    font-size: 14px;
+    position: absolute;
+    cursor: pointer;
+
+    border: none; 
+    background: none;
+    transition: opacity 0.3s ease, var(--tran-04);
+}
+#togglePassword i {
+    transition: opacity 0.3s ease, var(--tran-04);
+}
+#togglePassword i.fa-eye-slash {
+    transform: rotate(180deg);
+}
+#togglePassword i.fa-eye {
+    transform: rotate(0deg);
+}
